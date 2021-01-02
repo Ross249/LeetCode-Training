@@ -68,4 +68,21 @@ public class SlidingWindow {
         }
         return len;
     }
+
+    //leetcode-1493
+    public int longestSubarray(int[] nums) {
+        int count = 0,left = 0,right= 0,res = 0;
+        for(;right < nums.length;right++){
+            count += nums[right];
+            //中间不止一个0，需要缩减窗口
+            while(left <= right && count <= right - left - 1){
+                if (nums[left] == 1) {
+                    count--;
+                }
+                left++;
+            }
+            res = Math.max(res,right - left);
+        }
+        return res;
+    }
 }
