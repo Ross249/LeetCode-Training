@@ -46,4 +46,17 @@ public class FastAndSlowPointers {
         }while(slow != fast);
         return slow == 1;
     }
+
+    // leetcode-876
+    public ListNode middleNode(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode a = head,b = head;
+        while(b != null && b.next != null){
+            a = a.next;
+            b = b.next.next;
+        }
+        return a;
+    }
 }
