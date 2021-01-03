@@ -44,4 +44,39 @@ public class TwoPoints {
         }
         return head;
     }
+
+    //leetcode-977
+    public int[] sortedSquares(int[] nums) {
+        int left = 0,right = nums.length - 1,index = nums.length - 1;
+        int[] res = new int[nums.length];
+        while(index >= 0){
+            if(Math.abs(nums[left]) > Math.abs(nums[right])){
+                res[index] = nums[left] * nums[left];
+                index--;
+                left++;
+            }else{
+                res[index] = nums[right] * nums[right];
+                index--;
+                right--;
+            }
+        }
+        return res;
+    }
+
+    // leetcode713
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        if (k <= 1) {
+            return 0;
+        }
+        int left = 0,count = 0,start = 1;
+        for (int right = 0;right < nums.length ; right++) {
+            start *= nums[right];
+            while(start >= k){
+                start /= nums[left];
+                left++;
+            }
+            count += right - left + 1;
+        }
+        return count;
+    }
 }
