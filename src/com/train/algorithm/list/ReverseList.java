@@ -47,4 +47,40 @@ public class ReverseList {
         }
         return head;
     }
+
+    // leetcode-25
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode h = new ListNode(0);
+        h.next = head;
+        ListNode pre = h;
+        while(head!=null){
+            ListNode tail = pre;
+            for (int i = 0;i < k;i++ ) {
+                tail = tail.next;
+                if (tail == null) {
+                    return h.next;
+                }
+            }
+            ListNode nex = tail.next;
+            ListNode[] revers = reverse(head,tail);
+            head = revers[0];
+            tail = revers[1];
+            pre.next = head;
+            tail.next = nex;
+            pre = tail;
+            head = tail.next;
+        }
+        return h.next;
+    }
+    public ListNode[] reverse(ListNode head,ListNode tail){
+        ListNode pre = tail.next;
+        ListNode p = head;
+        while(pre!=tail){
+            ListNode temp = p.next;
+            p.next = pre;
+            pre = p;
+            p = temp;
+        }
+        return new ListNode[]{tail,head};
+    }
 }
