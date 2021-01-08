@@ -7,7 +7,12 @@ public class TreeTravel {
         int val;
         TreeNode left;
         TreeNode right;
-        TreeNode(int x) { val = x; }
+        TreeNode() {}
+        TreeNode(int val) { this.val = val; }
+        TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
     }
 
     public void pre(TreeNode root){
@@ -152,4 +157,56 @@ public class TreeTravel {
         }
         return 0;
     }
+
+    // leetcode-112
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if (root == null) {
+            return false;
+        }
+        if (root.left == null && root.right == null) {
+            return sum == root.val;
+        }
+        return hasPathSum(root.left,sum - root.val) || hasPathSum(root.right,sum - root.val);
+    }
+
+    // leetcode-113
+    List<List<Integer>> res = new LinkedList<>();
+    Deque<Integer>  queue = new LinkedList<>();
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        dfs(root,sum);
+        return res;
+    }
+    public void dfs(TreeNode root,int sum){
+        if (root == null) {
+            return;
+        }
+        queue.offer(root.val);
+        sum -= root.val;
+        if (root.left == null && root.right == null && sum == 0) {
+            res.add(new LinkedList<Integer>(queue));
+        }
+        dfs(root.left,sum);
+        dfs(root.right,sum);
+        queue.pollLast();
+    }
+
+    // leetcode-437
+    public int pathSum(TreeNode root, int sum) {
+        if (root == null) {
+            return 0;
+        }
+        int result = countPath(root,sum);
+        int a = pathSum(root.left,sum);
+        int b = pathSum(root.right,sum);
+        return result + a + b;
+    }
+    public int countPath(TreeNode root,int sum){
+        if (root == null) {
+            return 0;
+        }
+        sum = sum - root.val;
+        int result = sum == 0 ? 1 : 0;
+        return result + countPath(root.left,sum) + countPath(root.right,sum);
+    }
+
 }
