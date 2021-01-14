@@ -1,5 +1,7 @@
 package com.train.algorithm.list;
 
+import java.util.Arrays;
+
 // 双指针合集
 public class TwoPoints {
     public class ListNode {
@@ -78,5 +80,38 @@ public class TwoPoints {
             count += right - left + 1;
         }
         return count;
+    }
+
+
+    // 面试题16.06
+    public int smallestDifference(int[] a, int[] b) {
+        Arrays.sort(a);
+        Arrays.sort(b);
+        int n = a.length,m = b.length;
+        int i = 0,j = 0;
+        long res = Integer.MAX_VALUE;
+        while(i < n && j < m){
+            if (res == 0) {
+                return 0;
+            }
+            if (a[i] < b[j]) {
+                while(i < n && a[i] < b[j]){
+                    i++;
+                }
+                if (i < n) {
+                    res = Math.min(res,Math.abs((long) a[i] - b[j]));
+                }
+                res = Math.min(res,Math.abs((long) a[i - 1] - b[j]));
+            }else if (a[i] >= b[j]) {
+                while(j < m && a[i] > b[j]){
+                    j++;
+                }
+                if (j < m) {
+                    res = Math.min(res,Math.abs((long) a[i] - b[j]));
+                }
+                res = Math.min(res,Math.abs((long) a[i] - b[j-1]));
+            }
+        }
+        return (int)res;
     }
 }
