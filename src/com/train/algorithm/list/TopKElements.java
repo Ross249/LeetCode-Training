@@ -74,4 +74,84 @@ public class TopKElements {
         }
         return res;
     }
+
+    // leetcode-451
+    public String frequencySort(String s) {
+        char[] c = s.toCharArray();
+        Map<Character,Integer> map = new HashMap<>();
+        char[] re = new char[c.length];
+        for (char c1 : c) {
+            if (map.containsKey(c1)) {
+                map.put(c1,map.get(c1) + 1);
+            }else{
+                map.put(c1,1);
+            }
+        }
+        Queue<Character> queue = new PriorityQueue<Character>(new Comparator<Character>(){
+            @Override
+            public int compare(Character a, Character b){
+                return map.get(a) - map.get(b);
+            }
+        });
+        for (Character key:map.keySet()) {
+            queue.add(key);
+        }
+        int i = 0;
+        while(!queue.isEmpty()){
+            char temp = queue.poll();
+            int count = map.get(temp);
+            for (int j = 0;j <  count;j++ ) {
+                re[i] = temp;
+                i++;
+            }
+        }
+        String res = String.valueOf(re);
+        String result = new StringBuilder(res).reverse().toString();
+        return result;
+    }
+
+    // leetcode-703
+    class KthLargest {
+        private PriorityQueue<Integer> queue;
+        private int limit;
+        public KthLargest(int k, int[] nums) {
+            limit = k;
+            queue = new PriorityQueue<>(k);
+            for (int num : nums) {
+                add(num);
+            }
+        }
+
+        public int add(int val) {
+            if (queue.size() < limit) {
+                queue.add(val);
+            }else if (val > queue.peek()) {
+                queue.poll();
+                queue.add(val);
+            }
+            return queue.peek();
+        }
+    }
+
+    // leetcode-658
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        int len = arr.length;
+        int left = 0;
+        int right = len - 1;
+        int removeNums = len - k;
+        while(removeNums > 0){
+            if (x - arr[left] <= arr[right] - x) {
+                right--;
+            }else{
+                left++;
+            }
+            removeNums--;
+        }
+        List<Integer> res = new ArrayList<>();
+        for (int i = left;i < left +k ;i++ ) {
+            res.add(arr[i]);
+        }
+        return res;
+    }
+
 }
