@@ -65,4 +65,55 @@ public class ZeroOneKnapsack {
         }
         return false;
     }
+
+    // leetcode-907
+    public int sumSubarrayMins(int[] arr) {
+        long res = 0,sum = 0;
+        int[] s = new int[arr.length + 1];
+        int length = 0;
+        s[length++] = -1;
+        for (int i = 0;i < arr.length ;i++ ) {
+            while(length > 1 && arr[s[length - 1]] >= arr[i]){
+                sum -= arr[s[length - 1]] * (s[length - 1] - s[length - 2]);
+                length--;
+            }
+            sum += arr[i] * (i - s[length - 1]);
+            res += sum;
+            s[length++] = i;
+        }
+        return (int)(res % 1000000007);
+    }
+
+    // leetcode-494
+    public int findTargetSumWays(int[] nums, int S) {
+        int sum = 0;
+        for (int i = 0;i < nums.length ;i++ ) {
+            sum += nums[i];
+        }
+        // 合法性判定
+        if (Math.abs(S) > Math.abs(sum)) {
+            return 0;
+        }
+
+        int len = nums.length;
+        int t = sum * 2 + 1;
+        int[][] dp = new int[len][t];
+        // 初始化
+        if (nums[0] == 0) {
+            dp[0][sum] = 2;
+        }else{
+            dp[0][sum+nums[0]] = 1;
+            dp[0][sum-nums[0]] = 1;
+        }
+
+        for (int i = 1;i < len ;i++ ) {
+            for (int j = 0;j < t ;j++ ) {
+                // 边界
+                int left = (j - nums[i]) >= 0 ? j - nums[i] : 0;
+                int right = (j + nums[i]) < t ? j + nums[i] : 0;
+                dp[i][j] = dp[i - 1][left] + dp[i - 1][right];
+            }
+        }
+        return dp[len - 1][sum + S];
+    }
 }
