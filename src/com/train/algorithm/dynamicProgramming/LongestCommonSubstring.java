@@ -81,4 +81,97 @@ public class LongestCommonSubstring {
         }
         return record[str2.length()].toString();
     }
+
+    // leetcode-801
+    public int minSwap(int[] A, int[] B) {
+        int n1 = 0,s1 = 1;
+        for (int i = 1;i < A.length ;i++ ) {
+            int n2 = Integer.MAX_VALUE,s2 = Integer.MAX_VALUE;
+            if (A[i-1] < A[i] && B[i-1] < B[i]) {
+                n2 = Math.min(n2,n1);
+                s2 = Math.min(s2,s1 + 1);
+            }
+            if (A[i-1]<B[i] && B[i-1] < A[i]) {
+                n2 = Math.min(n2,s1);
+                s2 = Math.min(s2,n1+1);
+            }
+            n1 = n2;
+            s1 = s2;
+        }
+        return Math.min(n1,s1);
+    }
+
+    // leetcode-1027
+    public int longestArithSeqLength(int[] A) {
+        int res = 0;
+        int len = A.length;
+        int[][] dp = new int[len][20002];
+        int offset = 10000;
+        for (int i = 0;i < dp.length ;i++ ) {
+            for (int j = 0;j < dp[0].length ;j++ ) {
+                dp[i][j] = 1;
+            }
+        }
+
+        for (int i = 1;i < len ;i++ ) {
+            for (int j = 0;j < i ;j++ ) {
+                int sub = A[j]-A[i];
+                dp[i][sub + offset] = Math.max(dp[i][sub + offset],dp[j][sub + offset] + 1);
+                res = Math.max(res,dp[i][sub + offset]);
+            }
+        }
+        return res;
+    }
+
+    // leetcode-72
+    public int minDistance(String word1, String word2) {
+        int n = word1.length();
+        int m = word2.length();
+
+        if (n * m == 0) {
+            return n + m;
+        }
+        int[][] dp = new int[n+1][m+1];
+        for (int i = 0;i < n+1 ;i++ ) {
+            dp[i][0] = i;
+        }
+        for (int j = 0;j < m+1 ;j++ ) {
+            dp[0][j] = j;
+        }
+
+        for (int i = 1;i < n+1 ;i++ ) {
+            for (int j = 1;j < m+1 ;j++ ) {
+                int left = dp[i - 1][j]+1;
+                int right = dp[i][j - 1]+1;
+                int left_down = dp[i - 1][j - 1];
+                if (word1.charAt(i - 1) != word2.charAt(j - 1)) {
+                    left_down += 1;
+                }
+                dp[i][j] = Math.min(left,Math.min(right,left_down));
+            }
+        }
+        return dp[n][m];
+    }
+
+    // leetcode-97
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int n = s1.length(),m = s2.length(),t = s3.length();
+        if (n + m != t) {
+            return false;
+        }
+        boolean[][] dp = new boolean[n+1][m+1];
+        dp[0][0] = true;
+        for (int i = 0;i <= n ;i++ ) {
+            for (int j = 0;j <= m ;j++ ) {
+                int p = i + j - 1;
+                if (i > 0) {
+                    dp[i][j] = dp[i][j] || (dp[i - 1][j] && s1.charAt(i - 1) == s3.charAt(p));
+                }
+                if (j > 0) {
+                    dp[i][j] = dp[i][j] || (dp[i][j - 1] && s2.charAt(j - 1) == s3.charAt(p));
+                }
+            }
+        }
+        return dp[n][m];
+    }
 }
