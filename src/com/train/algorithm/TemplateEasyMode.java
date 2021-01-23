@@ -2,6 +2,7 @@ package com.train.algorithm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class TemplateEasyMode {
     public class ListNode {
@@ -127,5 +128,90 @@ public class TemplateEasyMode {
             }
         }
         return list;
+    }
+
+    // NC-65
+    public int Fibonacci(int n) {
+        if (n == 0){
+            return 0;
+        }
+        if (n == 1 || n == 2){
+            return 1;
+        }
+        int p = 0,q = 0,r = 1;
+        for (int i = 0;i < n - 1;i++){
+            p = q;
+            q = r;
+            r = p + q;
+        }
+        return r;
+    }
+
+    // NC-107
+    public int solve (int[] a) {
+        int len = a.length;
+        if (a == null || len == 0){
+            return -1;
+        }
+        for (int i = len - 1;i >= 1;i--){
+            if (a[i] >= a[i - 1]){
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    // NC-110
+    public int[] solve (int n, int m, int[] a) {
+        m %= n;
+        reverse(a,0,n-1);
+        reverse(a,0,m-1);
+        reverse(a,m,n-1);
+        return a;
+    }
+    public static void reverse(int[] a,int start,int end){
+        while (start < end){
+            int temp = a[start];
+            a[start++] = a[end];
+            a[end--] = temp;
+        }
+    }
+
+    // NC-33
+    public ListNode mergeTwoLists (ListNode l1, ListNode l2) {
+        ListNode c = null;
+        if (l1 == null){
+            return l2;
+        }
+        if (l2 == null){
+            return l1;
+        }
+        if (l1.val < l2.val){
+            c = l1;
+            c.next = mergeTwoLists(l1.next,l2);
+        }else {
+            c = l2;
+            c.next = mergeTwoLists(l1,l2.next);
+        }
+        return c;
+    }
+
+    // NC-76
+    public class Solution {
+        Stack<Integer> stack1 = new Stack<Integer>();
+        Stack<Integer> stack2 = new Stack<Integer>();
+
+        public void push(int node) {
+            stack1.push(node);
+        }
+
+        public int pop() {
+            if (stack2.size() <= 0){
+                while (stack1.size()!=0){
+                    stack2.push(stack1.pop());
+                }
+            }
+            return stack2.pop();
+        }
     }
 }
