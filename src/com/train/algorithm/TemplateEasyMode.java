@@ -1,8 +1,6 @@
 package com.train.algorithm;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class TemplateEasyMode {
     public class ListNode {
@@ -213,5 +211,75 @@ public class TemplateEasyMode {
             }
             return stack2.pop();
         }
+    }
+
+    // NC-61
+    public int[] twoSum (int[] numbers, int target) {
+        int len = numbers.length;
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int i = 0;i < len;i++){
+            if (map.containsKey(target - numbers[i])){
+                return new int[]{map.get(target - numbers[i]),i+1};
+            }
+            map.put(numbers[i],i+1);
+        }
+        return new int[1];
+    }
+
+    // NC-22
+    public void merge(int A[], int m, int B[], int n) {
+        int len1 = m - 1,len2 = n - 1,len3 = n + m - 1;
+        while (len1 >= 0 && len2 >= 0){
+            A[len3--] = A[len1] < B[len2] ? B[len2--] : A[len1--];
+        }
+        System.arraycopy(B,0,A,0,len2 + 1);
+    }
+
+    // NC-52
+    public boolean isValid (String s) {
+        if (s.length() % 2 == 1){
+            return false;
+        }
+        Map<Character,Character> pair = new HashMap<Character, Character>(){
+            {
+                put('}','{');
+                put(']','[');
+                put(')','(');
+            }
+        };
+        Stack<Character> res = new Stack<>();
+        for (int i = 0;i < s.length();i++){
+            char c = s.charAt(i);
+            if (pair.containsKey(c)){
+                if (res.isEmpty() || !res.peek().equals(pair.get(c))){
+                    return false;
+                }
+                res.pop();
+            }else {
+                res.push(c);
+            }
+        }
+        return res.isEmpty();
+    }
+
+    // NC-19
+    public int maxsumofSubarray (int[] arr) {
+        int len = arr.length;
+        int res = arr[0];
+        for (int i = 1;i < len;i++){
+            arr[i] += Math.max(arr[i - 1],0);
+            res = Math.max(res,arr[i]);
+        }
+        return res;
+    }
+
+    // NC-66
+    public ListNode FindFirstCommonNode(ListNode pHead1, ListNode pHead2) {
+        ListNode a = pHead1,b = pHead2;
+        while (pHead1 != pHead2){
+            pHead1 = pHead1 != null ? pHead1.next : b;
+            pHead2 = pHead2 != null ? pHead2.next : a;
+        }
+        return pHead1;
     }
 }
