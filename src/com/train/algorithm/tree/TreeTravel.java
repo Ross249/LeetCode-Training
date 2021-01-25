@@ -10,9 +10,10 @@ public class TreeTravel {
         TreeNode() {}
         TreeNode(int val) { this.val = val; }
         TreeNode(int val, TreeNode left, TreeNode right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
     }
 
     public void pre(TreeNode root){
@@ -172,7 +173,7 @@ public class TreeTravel {
     // leetcode-113
     List<List<Integer>> res = new LinkedList<>();
     Deque<Integer>  queue = new LinkedList<>();
-    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+    public List<List<Integer>> pathSum1(TreeNode root, int sum) {
         dfs(root,sum);
         return res;
     }
@@ -208,5 +209,4 @@ public class TreeTravel {
         int result = sum == 0 ? 1 : 0;
         return result + countPath(root.left,sum) + countPath(root.right,sum);
     }
-
 }

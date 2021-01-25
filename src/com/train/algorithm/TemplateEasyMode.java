@@ -1,5 +1,7 @@
 package com.train.algorithm;
 
+import com.train.algorithm.tree.TreeTravel;
+
 import java.util.*;
 
 public class TemplateEasyMode {
@@ -8,6 +10,25 @@ public class TemplateEasyMode {
         ListNode next = null;
         ListNode(int val) {
             this.val = val;
+        }
+    }
+
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
         }
     }
 
@@ -281,5 +302,128 @@ public class TemplateEasyMode {
             pHead2 = pHead2 != null ? pHead2.next : a;
         }
         return pHead1;
+    }
+
+    // NC-32
+    public int sqrt (int x) {
+        int left = 0,right = x,ans = -1;
+        while (left <= right){
+            int mid = (right - left) / 2 + left;
+            if ((long) mid * mid <= x){
+                ans = mid;
+                left = mid + 1;
+            }else {
+                right = mid - 1;
+            }
+        }
+        return ans;
+    }
+
+    // NC-70
+    public ListNode sortInList (ListNode head) {
+        if (head == null || head.next == null){
+            return head;
+        }
+        ListNode fast = head.next,slow = head;
+        while (fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode temp = slow.next;
+        slow.next = null;
+        ListNode left = sortInList(head);
+        ListNode right = sortInList(temp);
+        ListNode a = new ListNode(0);
+        ListNode res = a;
+        while (left != null && right != null){
+            if (left.val < right.val){
+                a.next = left;
+                left = left.next;
+            }else {
+                a.next = right;
+                right = right.next;
+            }
+            a = a.next;
+        }
+        a.next = left != null ? left : right;
+        return res.next;
+    }
+
+    // NC-62
+    public boolean IsBalanced_Solution(TreeNode root) {
+        return recur(root) != -1;
+    }
+
+    private int recur(TreeNode root){
+        if (root == null){
+            return 0;
+        }
+        int left = recur(root.left);
+        if (left == -1){
+            return -1;
+        }
+        int right = recur(root.right);
+        if (right == -1){
+            return -1;
+        }
+        return Math.abs(right - left) < 2 ? Math.max(left,right) + 1 : -1;
+    }
+
+    // NC-72
+    public void Mirror(TreeNode root) {
+        Mirror1(root);
+    }
+    public TreeNode Mirror1(TreeNode root){
+        if (root == null){
+            return null;
+        }
+        TreeNode temp = root.left;
+        root.left = Mirror1(root.right);
+        root.right = Mirror1(temp);
+        return root;
+    }
+
+    // NC-90
+    Stack<Integer> stack1 = new Stack<>();
+    Stack<Integer> minStack = new Stack<>();
+    public int[] getMinStack (int[][] op) {
+        List<Integer> list = new ArrayList<>();
+        for (int[] opt : op){
+            if (opt[0] == 1){
+                push(opt[1]);
+            }else if (opt[0] == 2){
+                pop();
+            }else {
+                list.add(min());
+            }
+        }
+        int[] res = new int[list.size()];
+        for (int i = 0;i < list.size();i++){
+            res[i] = list.get(i);
+        }
+        return res;
+    }
+    public void push(int x) {
+        if (minStack.isEmpty()){
+            minStack.push(x);
+        }else if (x <= min()){
+            minStack.push(x);
+        }
+
+        stack1.push(x);
+    }
+
+    public void pop() {
+        if (stack1.isEmpty() || minStack.isEmpty()){
+            return;
+        }
+        if (stack1.peek().equals(minStack.peek())){
+            minStack.pop();
+        }
+        stack1.pop();
+    }
+
+    public int min() {
+        return minStack.peek();
     }
 }
