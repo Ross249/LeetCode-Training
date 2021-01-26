@@ -426,4 +426,88 @@ public class TemplateEasyMode {
     public int min() {
         return minStack.peek();
     }
+
+    // NC-13
+    public int maxDepth (TreeNode root) {
+        if (root == null){
+            return 0;
+        }
+        return Math.max(maxDepth(root.left),maxDepth(root.right)) + 1;
+    }
+
+    // NC-112
+    public static String solve (int M, int N) {
+        String res = "";
+        if (M == 0){
+            return res;
+        }
+        boolean count = true;
+        if (M < 0){
+            count = false;
+        }
+        String table = "0123456789ABCDEF";
+        while (M != 0){
+            if (M < 0){
+                M = -M;
+            }
+            res = table.charAt(M % N) + res;
+            M = M / N;
+        }
+        return count ? res : "-" + res;
+    }
+
+    // NC-75
+    public void FindNumsAppearOnce(int [] array,int num1[] , int num2[]) {
+        int temp = 0;
+        int flag = 1;
+        for (int a : array){
+            temp ^= a;
+        }
+        while ((temp & flag) == 0){
+            flag <<= 1;
+        }
+        for (int a : array){
+            if ((a & flag) == flag){
+                num1[0] ^= a;
+            }else {
+                num2[0] ^= a;
+            }
+        }
+    }
+
+    // NC-7
+    public int maxProfit (int[] prices) {
+        int len = prices.length;
+        if (len < 2){
+            return 0;
+        }
+        int[] dp = new int[2];
+        dp[0] = 0;
+        dp[1] = -prices[0];
+        for (int i = 1;i < prices.length;i++){
+            dp[0] = Math.max(dp[0],dp[1] + prices[i]);
+            dp[1] = Math.max(dp[1],-prices[i]);
+        }
+        return dp[0];
+    }
+
+    // NC-96
+    public boolean isPail (ListNode head) {
+        ListNode a = head;
+        List<Integer> temp = new ArrayList<>();
+        while (a != null){
+            temp.add(a.val);
+            a = a.next;
+        }
+        int left = 0,right = temp.size() - 1;
+        while (left <= right){
+            if (temp.get(left).equals(temp.get(right))){
+                left++;
+                right--;
+            }else {
+                return false;
+            }
+        }
+        return true;
+    }
 }
