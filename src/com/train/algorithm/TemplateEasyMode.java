@@ -510,4 +510,97 @@ public class TemplateEasyMode {
         }
         return true;
     }
+
+    // NC-73
+    public int MoreThanHalfNum_Solution(int [] array) {
+        int x = 0,votes = 0,count = 0;
+        for (int a : array){
+            if (votes == 0){
+                x = a;
+            }
+            votes += a == x ? 1 : -1;
+        }
+        for (int a : array){
+            if (a == x){
+                count++;
+            }
+        }
+        return count > array.length / 2 ? x : 0;
+    }
+
+    // NC-16
+    public boolean isSymmetric (TreeNode root) {
+        return root == null ? true : recur(root.left,root.right);
+    }
+    public boolean recur(TreeNode l,TreeNode r){
+        if (l == null && r == null){
+            return true;
+        }
+        if (l == null || r == null || l.val != r.val){
+            return false;
+        }
+        return recur(l.left,r.right) && recur(l.right,r.left);
+    }
+
+    // NC-69
+    public ListNode FindKthToTail(ListNode head,int k) {
+        if (head == null){
+            return head;
+        }
+        ListNode a = head,b = head,c = head;
+        ListNode d = null;
+        int count = 0;
+        while (c != null){
+            count++;
+            c = c.next;
+        }
+        if (count < k){
+            return d;
+        }
+        for (int i = 0;i < k;i++){
+            a = a.next;
+        }
+        while (a != null){
+            a = a.next;
+            b = b.next;
+        }
+        return b;
+    }
+
+    // NC-34
+    public int uniquePaths (int m, int n) {
+        if (m == 0 && n == 0){
+            return 0;
+        }
+        int[][] dp = new int[m][n];
+        for (int i = 0;i < m;i++){
+            dp[i][0] = 1;
+        }
+        for (int i = 0;i < n;i++){
+            dp[0][i] = 1;
+        }
+        for (int i = 1;i < m;i++){
+            for (int j = 1;j < n;j++){
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+
+    // NC-57
+    public static int reverse (int x) {
+        int res = 0;
+        while (x != 0){
+            int a = x % 10;
+            x /= 10;
+            if (res > Integer.MAX_VALUE / 10 || (res == Integer.MAX_VALUE / 10 && a > 7)){
+                return 0;
+            }
+            if (res < Integer.MIN_VALUE / 10 || (res == Integer.MIN_VALUE / 10 && a < -8)){
+                return 0;
+            }
+            res = res * 10 + a;
+        }
+        return res;
+    }
 }
