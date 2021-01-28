@@ -1,5 +1,5 @@
 HELP.md
-*/out/
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
@@ -19,6 +19,7 @@ target/
 *.iws
 *.iml
 *.ipr
+out
 
 ### NetBeans ###
 /nbproject/private/
