@@ -603,4 +603,85 @@ public class TemplateEasyMode {
         }
         return res;
     }
+
+    // NC-56
+    public boolean isPalindrome (int x) {
+        if(x < 0){
+            return false;
+        }
+        int div = 1;
+        while (x / div >= 10){
+            div *= 10;
+        }
+        while (x > 0){
+            int left = x / div;
+            int right = x % 10;
+            if (right != left){
+                return false;
+            }
+            x = (x % div) / 10;
+            div /= 100;
+        }
+        return true;
+    }
+
+    // NC-9
+    public boolean hasPathSum (TreeNode root, int sum) {
+        if (root == null){
+            return false;
+        }
+        if (root.left == null && root.right == null){
+            return sum == root.val;
+        }
+        return hasPathSum(root.left,sum-root.val) || hasPathSum(root.right,sum-root.val);
+    }
+
+    // NC-25
+    public ListNode deleteDuplicates (ListNode head) {
+        if (head == null){
+            return head;
+        }
+        ListNode a = head;
+        while (a!=null && a.next!=null){
+            if (a.val == a.next.val){
+                a.next = a.next.next;
+            }else {
+                a = a.next;
+            }
+        }
+        return head;
+    }
+
+    // NC-67
+    public int FindGreatestSumOfSubArray(int[] array) {
+        int len = array.length;
+        int res = array[0];
+        for (int i = 1;i < len;i++){
+            array[i] += Math.max(0,array[i-1]);
+            res = Math.max(res,array[i]);
+        }
+        return res;
+    }
+
+    // NC-81
+    TreeNode res;
+    int k ;
+    TreeNode KthNode(TreeNode pRoot, int k) {
+        this.k = k;
+        dfs(pRoot);
+        return res;
+    }
+    void dfs(TreeNode pRoot){
+        if (pRoot == null){
+            return;
+        }
+        dfs(pRoot.left);
+        if (k==0){
+            return;
+        }
+        if (--k == 0){
+            res = pRoot;
+        }
+        dfs(pRoot.right);
+    }
 }
