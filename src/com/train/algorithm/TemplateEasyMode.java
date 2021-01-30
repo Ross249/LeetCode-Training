@@ -684,4 +684,111 @@ public class TemplateEasyMode {
         }
         dfs(pRoot.right);
     }
+
+    // NC-101
+    public int solve1 (int[] a) {
+        int len = a.length;
+        int left = 0,right = len - 1;
+        while (left <= right){
+            int mid = left + (right - left) / 2;
+            if (mid == a[mid]){
+                left = mid + 1;
+            }else {
+                right = mid - 1;
+            }
+        }
+        return left;
+    }
+
+    // NC-126
+    public int minMoney (int[] arr, int aim) {
+        int[] dp = new int[aim + 1];
+        Arrays.fill(dp,aim+1);
+        dp[0] = 0;
+        for (int i = 1;i <= aim;i++){
+            for (int j = 0;j < arr.length;j++){
+                if (arr[j] <= i){
+                    dp[i] = Math.min(dp[i],dp[i - arr[j]] + 1);
+                }
+            }
+        }
+        return dp[aim] > aim ? -1 : dp[aim];
+    }
+
+    // NC-89
+    public String trans(String s, int n) {
+        List<String> list = new ArrayList<String>(Arrays.asList(s.split(" ")));
+        Collections.reverse(list);
+        List<String> res = new ArrayList<>();
+        for (String str : list){
+            if (" ".equals(str)){
+                continue;
+            }
+            res.add(upperAndLower(str));
+        }
+        if (s.endsWith(" ")){
+            res.add(0," ");
+        }
+        return ListToString(res);
+    }
+
+    private String upperAndLower(String s){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0;i < s.length();i++){
+            char c = s.charAt(i);
+            if (c >='a' && c <= 'z'){
+                sb.append((char) (c - 'a' + 'A'));
+            }else {
+                sb.append((char) (c - 'A' + 'a'));
+            }
+        }
+        return sb.toString();
+    }
+
+    private String ListToString(List<String> list){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0,len = list.size();i < len;i++){
+            String s = list.get(i);
+            if (i == 0 && " ".equals(s)){
+                continue;
+            }
+            if (i > 0){
+                sb.append(" ");
+            }
+            sb.append(s);
+        }
+        return sb.toString();
+    }
+
+    // NC-55
+    public String longestCommonPrefix (String[] strs) {
+        if (strs == null || strs.length == 0){
+            return "";
+        }
+        int len = strs.length;
+        int count = strs[0].length();
+        for (int i = 0;i < count;i++){
+            char c = strs[0].charAt(i);
+            for (int j = 1;j < len;j++){
+                if (i == strs[j].length() || strs[j].charAt(i) != c){
+                    return strs[0].substring(0,i);
+                }
+            }
+        }
+        return strs[0];
+    }
+
+    // NC-117
+    public TreeNode mergeTrees (TreeNode t1, TreeNode t2) {
+        if (t1 == null){
+            return t2;
+        }
+        if (t2 == null){
+            return t1;
+        }
+        TreeNode m = new TreeNode(t1.val + t2.val);
+        m.left = mergeTrees(t1.left,t2.left);
+        m.right = mergeTrees(t1.right,t2.right);
+        return m;
+    }
 }
