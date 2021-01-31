@@ -791,4 +791,126 @@ public class TemplateEasyMode {
         m.right = mergeTrees(t1.right,t2.right);
         return m;
     }
+
+    // NC-77
+    public void reOrderArray(int [] array) {
+        int len = array.length;
+        if (len == 0){
+            return;
+        }
+        int peven = 0;
+        while (peven < len && array[peven] % 2==1){
+            peven++;
+        }
+        if (peven == len){
+            return;
+        }
+        int podd = 0;
+        while (podd < len){
+            while (podd < len && array[podd] % 2 == 0){
+                podd++;
+            }
+            if (podd == len){
+                return;
+            }
+            if (podd > peven){
+                int temp = array[podd];
+                for (int i = podd;i > peven;i--){
+                    array[i] = array[i - 1];
+                }
+                array[peven] = temp;
+                peven++;
+            }
+            podd++;
+        }
+        return;
+    }
+
+    // NC-134
+    public int maxProfit1 (int[] prices) {
+        int size = prices.length;
+        int[][] dp = new int[size][2];
+        dp[0][0] = 0;
+        dp[0][1] = -prices[0];
+        for (int i = 1;i < size;i++){
+            dp[i][0] = Math.max(dp[i-1][0],dp[i-1][1] + prices[i]);
+            dp[i][1] = Math.max(dp[i-1][1],dp[i-1][0] - prices[i]);
+        }
+        return dp[size - 1][0];
+    }
+
+    // NC-58
+    int index = 1,prev = Integer.MIN_VALUE,temp = 0;
+    public int[] findError (TreeNode root) {
+        int[] res = new int[2];
+        inorder(root,res);
+        if (index == 0){
+            res[index] = temp;
+        }
+        return res;
+    }
+
+    public void inorder(TreeNode root,int[] res){
+        if (root == null){
+            return;
+        }
+        inorder(root.left,res);
+        if (prev != Integer.MIN_VALUE){
+            if (root.val < prev){
+                if (index == 1){
+                    res[index--] = prev;
+                    temp = root.val;
+                }else {
+                    res[index--] = root.val;
+                    temp = prev;
+                }
+            }
+        }
+        prev = root.val;
+        inorder(root.right,res);
+    }
+
+    // NC-98
+    public boolean isContains (TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 == null){
+            return true;
+        }
+        if (root1 == null){
+            return false;
+        }
+        return recur1(root1,root2) || isContains(root1.left,root2) || isContains(root1.right,root2);
+    }
+
+    public boolean recur1(TreeNode root1,TreeNode root2){
+        if (root2 == null){
+            return true;
+        }
+        if (root1 == null || root1.val != root2.val){
+            return false;
+        }
+        if (root1.val == root2.val){
+            return recur1(root1.left,root2.left) && recur1(root1.right, root2.right);
+        }
+        return false;
+    }
+
+    // NC-125
+    public int maxlenEqualK (int[] arr, int k) {
+        if (arr == null || arr.length == 0){
+            return 0;
+        }
+        Map<Integer,Integer> map = new HashMap<>();
+        map.put(0,-1);
+        int len = 0,sum = 0;
+        for (int i = 0;i < arr.length;i++){
+            sum += arr[i];
+            if (map.containsKey(sum - k)){
+                len = Math.max(len,i-map.get(sum-k));
+            }
+            if (!map.containsKey(sum)){
+                map.put(sum,i);
+            }
+        }
+        return len;
+    }
 }
