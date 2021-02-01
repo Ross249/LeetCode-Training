@@ -913,4 +913,74 @@ public class TemplateEasyMode {
         }
         return len;
     }
+
+    // NC-71
+    public int minNumberInRotateArray(int [] array) {
+        if (array.length == 0){
+            return 0;
+        }
+        int left = 0,right = array.length - 1;
+        while (left < right){
+            int p = left + (right - left) / 2;
+            if(array[p] < array[right]){
+                right = p;
+            }else if (array[p] > array[right]){
+                left = p + 1;
+            }else {
+                right--;
+            }
+        }
+        return array[left];
+    }
+
+    // NC-74
+    public int GetNumberOfK(int [] array , int k) {
+        return help(array, k) - help(array, k - 1);
+    }
+
+    public int help(int[] array,int k){
+        int i = 0,j = array.length - 1;
+        while (i <= j){
+            int m = (i + j) / 2;
+            if(array[m] <= k){
+                i = m + 1;
+            }else {
+                j = m - 1;
+            }
+        }
+        return i;
+    }
+
+    // NC-11
+    public TreeNode sortedArrayToBST (int[] num) {
+        return inorder1(num,0,num.length);
+    }
+
+    TreeNode inorder1(int[] nums,int left,int right){
+        if (left >= right){
+            return null;
+        }
+        int mid = (left + right) / 2;
+        TreeNode l = inorder1(nums, left, mid);
+        TreeNode root = new TreeNode(nums[mid]);
+        TreeNode r = inorder1(nums, mid + 1, right);
+        root.left = l;
+        root.right = r;
+        return root;
+    }
+
+    // NC-114
+    public boolean solve (String A, String B) {
+        if(A.length() != B.length()){
+            return false;
+        }
+        for (int i = 1;i < A.length();i++){
+            StringBuilder sb = new StringBuilder(A.substring(i,A.length()));
+            sb.append(A.substring(0,i));
+            if (sb.toString().equals(B)){
+                return true;
+            }
+        }
+        return false;
+    }
 }
