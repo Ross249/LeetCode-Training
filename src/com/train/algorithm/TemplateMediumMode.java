@@ -218,4 +218,150 @@ public class TemplateMediumMode {
         }
         return res;
     }
+
+    // NC-3
+    public ListNode detectCycle(ListNode head) {
+        if (head == null){
+            return head;
+        }
+        ListNode a = head;
+        ListNode b = head;
+        ListNode flag = null;
+        while (b != null && b.next != null){
+            a = a.next;
+            b = b.next.next;
+            if (a == b){
+                flag = a;
+                break;
+            }
+        }
+        if (flag == null){
+            return null;
+        }
+        b = head;
+        while (a != b){
+            b = b.next;
+            a = a.next;
+        }
+        return a;
+    }
+
+    // NC-53
+    public ListNode removeNthFromEnd (ListNode head, int n) {
+        if (head == null){
+            return head;
+        }
+        ListNode a = head;
+        int len = 0;
+        while (a != null){
+            a = a.next;
+            len++;
+        }
+        int index = len - n;
+        if (index == 0){
+            return head.next;
+        }
+        ListNode b = head;
+        int count = 0;
+        while (b != null){
+            count++;
+            if (count == index){
+                b.next = b.next.next;
+                break;
+            }
+            b = b.next;
+        }
+        return head;
+    }
+
+    // NC-127
+    public String LCS (String str1, String str2) {
+        if (str1 == null || str2 == null || str1.length() == 0 || str2.length() == 0){
+            return "-1";
+        }
+        int len1 = str1.length(),len2 = str2.length();
+        int[][] dp = new int[len1][len2];
+        int len = 0,begin = 0;
+        for (int i = 0;i < len1;i++){
+            for (int j = 0;j < len2;j++){
+                if (str1.charAt(i) == str2.charAt(j)){
+                    if(i == 0||j == 0){
+                        dp[i][j] = 1;
+                    }else {
+                        dp[i][j] = dp[i-1][j-1] + 1;
+                    }
+                }else {
+                    dp[i][j] = 0;
+                }
+                if (dp[i][j] > len){
+                    len = dp[i][j];
+                    begin = i;
+                }
+            }
+        }
+        if (len == 0){
+            return "-1";
+        }else {
+            return str1.substring(begin - len + 1,begin + 1);
+        }
+    }
+
+    // NC-40
+    public ListNode addInList (ListNode head1, ListNode head2) {
+        head1 = reverse(head1);
+        head2 = reverse(head2);
+        ListNode head = new ListNode(-1);
+        ListNode cur = head;
+        int carry = 0;
+        while (head1 != null || head2 != null){
+            int var = carry;
+            if (head1 != null){
+                var += head1.val;
+                head1 = head1.next;
+            }
+            if (head2 != null){
+                var += head2.val;
+                head2 = head2.next;
+            }
+            cur.next = new ListNode(var % 10);
+            carry = var / 10;
+            cur = cur.next;
+        }
+        if (carry > 0){
+            cur.next = new ListNode(carry);
+        }
+        return reverse(head.next);
+    }
+
+    public ListNode reverse(ListNode head){
+        ListNode cur = head;
+        ListNode pre = null;
+        while (cur != null){
+            ListNode temp = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = temp;
+        }
+        return pre;
+    }
+
+    // NC-102
+    public int lowestCommonAncestor (TreeNode root, int o1, int o2) {
+        return dfs(root, o1, o2).val;
+    }
+
+    public TreeNode dfs(TreeNode root ,int o1,int o2){
+        if (root == null || root.val == o1 || root.val == o2){
+            return root;
+        }
+        TreeNode left = dfs(root.left,o1,o2);
+        TreeNode right = dfs(root.right, o1, o2);
+        if (left == null){
+            return right;
+        }
+        if (right == null){
+            return left;
+        }
+        return root;
+    }
 }
