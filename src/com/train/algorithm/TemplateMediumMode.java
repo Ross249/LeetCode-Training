@@ -364,4 +364,181 @@ public class TemplateMediumMode {
         }
         return root;
     }
+
+    // NC-14
+    public ArrayList<ArrayList<Integer>> zigzagLevelOrder (TreeNode root) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+        if (root == null){
+            return res;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        boolean order = true;
+        while (!queue.isEmpty()){
+            Deque<Integer> level = new LinkedList<>();
+            int size = queue.size();
+            for (int i = 0;i < size;i++){
+                TreeNode node = queue.poll();
+                if (order){
+                    level.offer(node.val);
+                }else {
+                    level.offerFirst(node.val);
+                }
+                if (node.left != null){
+                    queue.offer(node.left);
+                }
+                if (node.right != null){
+                    queue.offer(node.right);
+                }
+            }
+            res.add(new ArrayList<>(level));
+            order = !order;
+        }
+        return res;
+    }
+
+    // NC-1
+    public String solve (String s, String t) {
+        int lens = s.length();
+        int lent = t.length();
+        String s1 = reverse(s);
+        String t1 = reverse(t);
+        int maxLen = lens > lent ? lens : lent;
+
+        if (lens > lent){
+            for (int i = lent;i < lens;i++){
+                t1 += "0";
+            }
+        }else {
+            for (int i = lens;i < lent;i++){
+                s1 += "0";
+            }
+        }
+
+        StringBuffer res = new StringBuffer();
+        int carry = 0;
+        for (int i = 0;i < maxLen;i++){
+            int sum = Integer.parseInt(s1.charAt(i)+"") + Integer.parseInt(t1.charAt(i)+"") + carry;
+            res.append(sum % 10);
+            carry = sum / 10;
+        }
+        if (carry > 0){
+            res.append(carry);
+        }
+        return res.reverse().toString();
+    }
+
+    public String reverse(String str){
+        char[] chars = str.toCharArray();
+        int l = 0,r = chars.length - 1;
+        while (l < r){
+            char c = chars[l];
+            chars[l] = chars[r];
+            chars[r] = c;
+            l++;
+            r--;
+        }
+        return new String(chars);
+    }
+
+    // NC-12
+    public TreeNode reConstructBinaryTree(int [] pre,int [] in) {
+        if (pre.length == 0|| in.length == 0){
+            return null;
+        }
+        TreeNode root = new TreeNode(pre[0]);
+        build(root,pre,0,pre.length,in,0,in.length);
+        return root;
+    }
+    public void build(TreeNode root, int[] pre, int pleft, int pright, int[] in, int ileft, int iright) {
+        int i;
+        for (i = ileft; i < iright; i++) {
+            if (in[i] == root.val) {//从中序序列寻找根节点的位置
+                break;
+            }
+        }
+        int t = i - ileft;
+        if (t > 0) {//子树长度为0时不必生成子问题
+            root.left = new TreeNode(pre[pleft + 1]);
+            build(root.left, pre, pleft + 1, pleft + 1 + t, in, ileft, i);
+        }
+
+        if (pright - pleft - 1 - t > 0) {
+            root.right = new TreeNode(pre[pleft + 1 + t]);
+            build(root.right, pre, pleft + 1 + t, pright, in, i + 1, iright);
+        }
+    }
+
+    // NC-91
+    public int[] LIS (int[] arr) {
+        List<Integer> res = new ArrayList<>();
+        int[] maxLength = new int[arr.length];
+        for (int i = 0;i < arr.length;i++){
+            if (res.size() > 0){
+                if (res.get(res.size()-1) < arr[i]){
+                    res.add(arr[i]);
+                    maxLength[i] = res.size();
+                }else {
+                    for (int j = res.size() - 1;j >= 0;j--){
+                        if (res.get(j) < arr[i]){
+                            res.set(j + 1,arr[i]);
+                            maxLength[i] = j + 2;
+                            break;
+                        }
+                        if (j == 0){
+                            res.set(0,arr[i]);
+                            maxLength[i] = 1;
+                        }
+                    }
+                }
+            }else {
+                res.add(arr[i]);
+                maxLength[i] = 1;
+            }
+        }
+        int[] result = new int[res.size()];
+        for (int i = arr.length - 1,j = res.size();j > 0;i--){
+            if (maxLength[i] == j){
+                result[--j] = arr[i];
+            }
+        }
+        return result;
+    }
+
+    // NC-48
+    public int search (int[] A, int target) {
+        if (A[0] <= A[A.length - 1]){
+            return binary(A,target,0,A.length-1);
+        }
+        int left = 0,right = A.length - 1;
+        int mid;
+        while (left <= right){
+            mid = (left + right) / 2;
+            if (A[mid] >= A[0]){
+                left = mid + 1;
+            }else {
+                right = mid - 1;
+            }
+        }
+        if (target >= A[0]){
+            return binary(A,target,0,right);
+        }else {
+            return binary(A,target,left,A.length - 1);
+        }
+    }
+
+    public int binary(int[] a,int target,int left,int right){
+        int mid;
+        while (left <= right){
+            mid = (left + right) / 2;
+            if (a[mid] > target){
+                right = mid - 1;
+            }else if (a[mid] == target){
+                return mid;
+            }else {
+                left = mid + 1;
+            }
+        }
+        return -1;
+    }
 }
