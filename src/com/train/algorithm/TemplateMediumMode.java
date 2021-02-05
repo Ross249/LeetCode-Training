@@ -541,4 +541,177 @@ public class TemplateMediumMode {
         }
         return -1;
     }
+
+    // NC-54
+    public ArrayList<ArrayList<Integer>> threeSum(int[] num) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        Arrays.sort(num);
+        for (int i = 0;i < num.length - 2;i++){
+            int start = i + 1;
+            int end = num.length - 1;
+            while (start < end){
+                int sum = num[i] + num[start] + num[end];
+                if (sum < 0){
+                    start++;
+                }else if (sum > 0){
+                    end--;
+                }else {
+                    ArrayList<Integer> temp = new ArrayList<>();
+                    temp.add(num[i]);
+                    temp.add(num[start]);
+                    temp.add(num[end]);
+                    if (!res.contains(temp)){
+                        res.add(temp);
+                    }
+                    start++;
+                    end--;
+                }
+            }
+        }
+        return res;
+    }
+
+    // NC-17
+    public int getLongestPalindrome(String A, int n) {
+        if (A == null || n == 0){
+            return 0;
+        }
+        int maxLen = 1;
+        boolean[][] dp = new boolean[n][n];
+
+        for (int i = 0;i < n;i++){
+            dp[i][i] = true;
+        }
+        for (int j = 1;j < n;j++){
+            for (int i = 0;i < j;i++){
+                if (A.charAt(i) != A.charAt(j)){
+                    dp[i][j] = false;
+                }else {
+                    if (j - i < 3){
+                        dp[i][j] = true;
+                    }else {
+                        dp[i][j] = dp[i + 1][j - 1];
+                    }
+                }
+                if (dp[i][j] && j - i + 1 >maxLen){
+                    maxLen = j - i + 1;
+                }
+            }
+        }
+        return maxLen;
+    }
+
+    // NC-128
+    public long maxWater (int[] arr) {
+        if (arr == null || arr.length < 3){
+            return 0;
+        }
+        long leftMax = arr[0],rightMax = arr[arr.length - 1];
+        int l = 1,r = arr.length - 2;
+        long res = 0;
+        while (l <= r){
+            if (leftMax <= rightMax){
+                res += Math.max(leftMax-arr[l],0);
+                leftMax = Math.max(leftMax,arr[l++]);
+            }else {
+                res += Math.max(rightMax-arr[r],0);
+                rightMax = Math.max(rightMax,arr[r--]);
+            }
+        }
+        return res;
+    }
+
+    // NC-136
+    public int[] solve (int[] xianxu, int[] zhongxu) {
+        TreeNode root = reBuild(xianxu, zhongxu);
+        return bfs(root);
+    }
+
+    public TreeNode reBuild(int[] preOrder,int[] inOrder){
+        if (preOrder == null || preOrder.length == 0){
+            return null;
+        }
+        int val = preOrder[0],pos = 0,len = preOrder.length;
+        TreeNode root = new TreeNode(val);
+
+        for (;pos < len;pos++){
+            if (inOrder[pos] == val){
+                break;
+            }
+        }
+
+        root.left = reBuild(Arrays.copyOfRange(preOrder , 1 ,pos + 1),Arrays.copyOfRange(inOrder, 0 ,pos));
+        root.right = reBuild(Arrays.copyOfRange(preOrder,pos+1,len),Arrays.copyOfRange(inOrder,pos+1,len));
+        return root;
+    }
+
+    public int[] bfs(TreeNode root){
+        if (root == null){
+            return null;
+        }
+
+        List<Integer> list = new ArrayList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        for (TreeNode temp = root;!queue.isEmpty();){
+            for (int size = queue.size();size > 0;size-- ){
+                temp = queue.poll();
+                if (temp.left != null){
+                    queue.offer(temp.left);
+                }
+                if (temp.right != null){
+                    queue.offer(temp.right);
+                }
+            }
+            list.add(temp.val);
+        }
+        return list.stream().mapToInt(Integer::valueOf).toArray();
+    }
+
+    // NC-137
+    public int solve (String s) {
+        Stack<Integer> stack = new Stack<>();
+        int sum = 0,number = 0;
+        char sign = '+';
+        char[] chars = s.toCharArray();
+        for (int i = 0;i < chars.length;i++){
+            char c = chars[i];
+            if (c == '('){
+                int j = i + 1;
+                int count = 1;
+                while (count > 0){
+                    if (chars[j] == '('){
+                        count++;
+                    }
+                    if (chars[j] == ')') {
+                        count--;
+                    }
+                    j++;
+                }
+                number = solve(s.substring(i+1,j-1));
+                i = j - 1;
+            }
+            if (Character.isDigit(c)) {
+                number = number * 10 + c - '0';
+            }
+            if (!Character.isDigit(c) || i == chars.length - 1){
+                if (sign == '+'){
+                    stack.push(number);
+                }else if (sign == '-'){
+                    stack.push(-1 * number);
+                }else if (sign == '*'){
+                    stack.push(stack.pop() * number);
+                }else if (sign == '/'){
+                    stack.push(stack.pop() / number);
+                }
+                number = 0;
+                sign = c;
+            }
+        }
+        while (!stack.isEmpty()){
+            sum += stack.pop();
+        }
+        return sum;
+    }
 }
