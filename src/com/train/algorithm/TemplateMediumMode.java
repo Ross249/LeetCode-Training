@@ -714,4 +714,125 @@ public class TemplateMediumMode {
         }
         return sum;
     }
+
+    // NC-109
+    private static final int[][] DIRECTIONS = {{-1,0},{0,-1},{1,0},{0,1}};
+    private boolean[][] visited;
+    private int rows,cols;
+    private char[][] grid;
+    public int solve (char[][] grid) {
+        rows = grid.length;;
+        if(rows == 0){
+            return 0;
+        }
+        cols = grid[0].length;
+        this.grid = grid;
+        visited = new boolean[rows][cols];
+        int count = 0;
+        for (int i = 0;i < rows;i++){
+            for (int j = 0;j < cols;j++){
+                if(!visited[i][j] && grid[i][j] == '1'){
+                    dfs(i,j);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public void dfs(int i,int j){
+        visited[i][j] = true;
+        for (int k = 0;k < 4;k++){
+            int newX = i + DIRECTIONS[k][0];
+            int newY = j + DIRECTIONS[k][1];
+            if (inArea(newX,newY) && grid[newX][newY] == '1' && !visited[newX][newY]){
+                dfs(newX,newY);
+            }
+        }
+    }
+
+    public boolean inArea(int x,int y){
+        return x >= 0 && x < rows && y >=0 && y < cols;
+    }
+
+    // NC-141
+    public boolean judge (String str) {
+        if (str == null || str.length() == 0){
+            return false;
+        }
+        for (int i = 0,j = str.length() - 1;i < j;i++,j--){
+            if (str.charAt(i) != str.charAt(j)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // NC-97
+    public String[][] topKstrings (String[] strings, int k) {
+        if (k == 0){
+            return new String[][]{};
+        }
+        String[][] res = new String[k][2];
+        TreeMap<String,Integer> map = new TreeMap<>();
+        for (int i = 0;i < strings.length;i++){
+            String s = strings[i];
+            if (!map.containsKey(s)){
+                map.put(s,1);
+            }else {
+                map.put(s,map.get(s) + 1);
+            }
+        }
+
+        ArrayList<Map.Entry<String,Integer>> list = new ArrayList<>(map.entrySet());
+        Collections.sort(
+                list,(o1, o2) -> (o1.getValue().compareTo(o2.getValue())) == 0 ? o1.getKey().compareTo(o2.getKey()) : o2.getValue().compareTo(o1.getValue())
+        );
+        for(int i = 0;i < k;i++){
+            res[i][0] = list.get(i).getKey();
+            res[i][1] = String.valueOf(list.get(i).getValue());
+        }
+        return res;
+
+    }
+
+    // NC-59
+    public int minPathSum (int[][] matrix) {
+        for (int i = 0;i < matrix.length;i++){
+            for (int j = 0;j < matrix[0].length;j++){
+                if (i == 0 && j == 0){
+                    continue;
+                }else if (i == 0){
+                    matrix[i][j] = matrix[i][j - 1] + matrix[i][j];
+                }else if (j == 0){
+                    matrix[i][j] = matrix[i - 1][j] + matrix[i][j];
+                }else {
+                    matrix[i][j] = Math.min(matrix[i - 1][j],matrix[i][j - 1]) + matrix[i][j];
+                }
+            }
+        }
+        return matrix[matrix.length - 1][matrix[0].length - 1];
+    }
+
+    // NC-8
+    ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+    LinkedList<Integer> path = new LinkedList<>();
+    public ArrayList<ArrayList<Integer>> pathSum (TreeNode root, int sum) {
+        recur(root,sum);
+        return res;
+    }
+
+    public void recur(TreeNode root,int tar){
+        if (root == null){
+            return;
+        }
+        path.add(root.val);
+        tar -= root.val;
+        if (tar == 0 && root.left == null && root.right == null){
+            res.add(new ArrayList<>(path));
+        }
+        recur(root.left, tar);
+        recur(root.right, tar);
+        path.removeLast();
+    }
 }
