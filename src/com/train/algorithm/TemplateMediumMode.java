@@ -835,4 +835,103 @@ public class TemplateMediumMode {
         recur(root.right, tar);
         path.removeLast();
     }
+
+    // NC-30
+    public int minNumberdisappered (int[] arr) {
+        if (arr == null || arr.length == 0){
+            return 1;
+        }
+        Arrays.sort(arr);
+        int first = 1;
+        for (int i = 0;i < arr.length;i++){
+            if (arr[i] < 0){
+                continue;
+            }else if (arr[i] > first){
+                return first;
+            }else {
+                first++;
+            }
+        }
+        return first;
+    }
+
+    // NC-21
+    public ListNode reverseBetween (ListNode head, int m, int n) {
+        ListNode nHead = new ListNode(-1);
+        nHead.next = head;
+        ListNode p1 = nHead;
+
+        for (int i = 1;i < m && p1 != null;++i){
+            p1 = p1.next;
+        }
+
+        ListNode cur = p1.next;
+        p1.next = null;
+        ListNode tail = null;
+        for (int i = 1;i <= n - m + 1 && cur != null;i++){
+            ListNode tmp = cur;
+            cur = cur.next;
+            tmp.next = p1.next;
+            p1.next = tmp;
+            if (tail == null){
+                tail = tmp;
+            }
+        }
+        tail.next = cur;
+        return nHead.next;
+    }
+
+    // NC-5
+    public int sumNumbers (TreeNode root) {
+        return dfs(root,0);
+    }
+
+    public int dfs(TreeNode root,int prev){
+        if (root == null){
+            return 0;
+        }
+        int sum = 10 * prev + root.val;
+        if (root.left == null && root.right == null){
+            return sum;
+        }else {
+            return dfs(root.left,sum) + dfs(root.right,sum);
+        }
+    }
+
+    // NC-86
+    public int[] findElement(int[][] mat, int n, int m, int x) {
+        int lenN = n - 1,lenM = 0;
+        while (lenN >= 0 && lenM <= m-1){
+            if (mat[lenN][lenM] == x){
+                return new int[]{lenN,lenM};
+            }else if (mat[lenN][lenM] > x){
+                lenN--;
+            }else {
+                lenM++;
+            }
+        }
+        return new int[]{};
+    }
+
+    // NC-24
+    public ListNode deleteDuplicates (ListNode head) {
+        ListNode nHead = new ListNode(-1);
+        nHead.next = head;
+        ListNode a = head;
+        ListNode b = nHead;
+        while (a != null && a.next != null){
+            if (a.val == a.next.val){
+                ListNode tmp = a.next;
+                while (tmp != null && tmp.val == a.val){
+                    tmp = tmp.next;
+                }
+                b.next = tmp;
+                a = tmp;
+            }else {
+                a = a.next;
+                b = b.next;
+            }
+        }
+        return nHead.next;
+    }
 }
