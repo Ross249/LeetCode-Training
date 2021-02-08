@@ -934,4 +934,155 @@ public class TemplateMediumMode {
         }
         return nHead.next;
     }
+
+    // NC-133
+    public ListNode oddEvenList (ListNode head) {
+        if (head == null || head.next == null){
+            return head;
+        }
+        ListNode odd = head,oddHead = head,even = head.next,evenHead = head.next;
+        while (even != null && even.next != null){
+            odd.next = even.next;
+            odd = odd.next;
+            even.next = odd.next;
+            even = even.next;
+        }
+        odd.next = evenHead;
+        return oddHead;
+    }
+
+    // NC-20
+    ArrayList<String> res1 = new ArrayList<>();
+    public ArrayList<String> restoreIpAddresses (String s) {
+        if (s.length() == 0){
+            return res1;
+        }
+        backTrack(s,0,3);
+        return res1;
+    }
+
+    public void backTrack(String s,int start,int count){
+        if (count == 0){
+            String[] splits = s.split("\\.");
+            if (splits.length < 4){
+                return;
+            }
+            for (String str : splits){
+                if (str.length() > 1 && str.charAt(0) == '0'){
+                    return;
+                }
+                if (Integer.valueOf(str) > 255){
+                    return;
+                }
+            }
+            res1.add(s);
+            return;
+        }
+
+        if (start >= s.length()){
+            return;
+        }
+        int len = s.length();
+        backTrack(s.substring(0,start+1)+'.'+s.substring(start+1,len),start+2,count-1);
+        if (start < len - 2){
+            backTrack(s.substring(0,start + 2)+'.'+s.substring(start+2,len),start+3,count-1);
+        }
+        if (start < len - 3){
+            backTrack(s.substring(0,start + 3)+'.'+s.substring(start+3,len),start+4,count-1);
+        }
+    }
+
+    // NC-26
+    public ArrayList<String> generateParenthesis (int n) {
+        ArrayList<String> res = new ArrayList<>();
+        if (n == 0){
+            return res;
+        }
+        dfs("",n,n,res);
+        return res;
+    }
+
+    public void dfs(String cur,int left,int right,ArrayList<String> res){
+        if (left == 0 && right == 0){
+            res.add(cur);
+            return;
+        }
+        if (left > right){
+            return;
+        }
+        if (left > 0){
+            dfs(cur+"(",left-1,right,res);
+        }
+        if (right > 0){
+            dfs(cur + ")",left,right - 1,res);
+        }
+    }
+
+    // NC-92
+    public String LCS1 (String s1, String s2) {
+        int len1 = s1.length();
+        int len2 = s2.length();
+        if (len1 == 0 || len2 == 0){
+            return "-1";
+        }
+        int[][] dp = new int[len1+1][len2+1];
+        for (int i = 1;i <= len1;i++){
+            for (int j = 1;j <= len2;j++){
+                if (s1.charAt(i-1) == s2.charAt(j-1)){
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                }else {
+                    dp[i][j] = Math.max(dp[i][j-1],dp[i-1][j]);
+                }
+            }
+        }
+
+        int i = len1,j = len2;
+        StringBuilder sb = new StringBuilder();
+        while (i > 0 && j > 0){
+            if (s1.charAt(i-1) == s2.charAt(j-1)){
+                sb.append(s1.charAt(i-1));
+                i--;
+                j--;
+            }else {
+                if (dp[i][j-1] >dp[i-1][j]){
+                    j--;
+                }else if (dp[i][j-1] < dp[i-1][j]){
+                    i--;
+                }else if (dp[i][j-1] == dp[i-1][j]){
+                    j--;
+                }
+            }
+        }
+        if (sb.length() == 0){
+            return "-1";
+        }else {
+            return sb.reverse().toString();
+        }
+    }
+
+    // NC-87
+    public int solve (int n, int k) {
+        if (n < 1 || k < 1){
+            return 0;
+        }
+        int time = (int) (Math.log(n) / Math.log(2)) + 1;
+        if (k >= time){
+            return time;
+        }
+
+        int[] dp = new int[k];
+        int res = 0;
+        while (true){
+            res++;
+            int pre = 0;
+            for (int i = 0;i < k;i++){
+                int temp = dp[i];
+                dp[i] = dp[i] + pre + 1;
+                pre = temp;
+                if (dp[i] >= n){
+                    return res;
+                }
+            }
+        }
+    }
 }
