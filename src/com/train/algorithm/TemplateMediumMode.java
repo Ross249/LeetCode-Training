@@ -3,6 +3,12 @@ package com.train.algorithm;
 import java.util.*;
 
 public class TemplateMediumMode {
+    public class Interval {
+        int start;
+        int end;
+        Interval() { start = 0; end = 0; }
+        Interval(int s, int e) { start = s; end = e; }
+    }
     public class ListNode {
         int val;
         ListNode next = null;
@@ -1083,6 +1089,146 @@ public class TemplateMediumMode {
                     return res;
                 }
             }
+        }
+    }
+
+    // NC-37
+    public ArrayList<Interval> merge(ArrayList<Interval> intervals) {
+        ArrayList<Interval> res = new ArrayList<>();
+        Collections.sort(intervals,(a,b)->a.start - b.start);
+        int len = intervals.size();
+        int i = 0;
+        while (i < len){
+            int left = intervals.get(i).start;
+            int right = intervals.get(i).end;
+            while (i < len - 1 && intervals.get(i+1).start <= right){
+                right = Math.max(right,intervals.get(i+1).end);
+                i++;
+            }
+            res.add(new Interval(left,right));
+            i++;
+        }
+        return res;
+    }
+
+    // NC-18
+    public int[][] rotateMatrix(int[][] mat, int n) {
+        for (int i = 0;i < n;i++){
+            for (int j = i+1;j < n;j++){
+                int tmp = mat[i][j];
+                mat[i][j] = mat[j][i];
+                mat[j][i] = tmp;
+            }
+        }
+
+        for (int i = 0;i < n;i++){
+            for (int j = 0;j < n / 2;j++){
+                int tmp = mat[i][j];
+                mat[i][j] = mat[i][n-j-1];
+                mat[i][n-j-1] = tmp;
+            }
+        }
+        return mat;
+    }
+
+    // NC-60
+    public boolean[] judgeIt (TreeNode root) {
+        boolean[] res = new boolean[2];
+        res[0] = isBST(root,Long.MIN_VALUE,Long.MAX_VALUE);
+        res[1] = isCompleteTree(root);
+        return res;
+    }
+
+    public boolean isBST(TreeNode root,long lower,long upper){
+        if (root == null){
+            return true;
+        }
+        if (root.val <= lower || root.val >= upper){
+            return false;
+        }
+        return isBST(root.left,lower,root.val) && isBST(root.right,root.val,upper);
+    }
+
+    public boolean isCompleteTree(TreeNode root){
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (queue.peek() != null){
+            TreeNode node = queue.poll();
+            queue.offer(node.left);
+            queue.offer(node.right);
+        }
+        while (!queue.isEmpty() && queue.peek() == null){
+            queue.poll();
+        }
+        return queue.isEmpty();
+    }
+
+    // NC-2
+    public void reorderList(ListNode head) {
+        if (head == null || head.next == null || head.next.next == null){
+            return;
+        }
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while (fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode mid = slow.next;
+        slow.next = null;
+        ListNode newHead = reverse1(mid);
+
+        while (newHead != null){
+            ListNode tmp = newHead.next;
+            newHead.next = head.next;
+            head.next = newHead;
+            head = newHead.next;
+            newHead = tmp;
+        }
+    }
+
+    public ListNode reverse1(ListNode head){
+        if (head == null){
+            return head;
+        }
+        ListNode tail = head;
+        head = head.next;
+        tail.next = null;
+        while (head != null){
+            ListNode tmp = head.next;
+            head.next = tail;
+            tail = head;
+            head = tmp;
+        }
+        return tail;
+    }
+
+    // NC-42
+    public ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        if (num == null || num.length == 0){
+            return res;
+        }
+        Arrays.sort(num);
+        boolean[] visit = new boolean[num.length];
+        ArrayList<Integer> list = new ArrayList<>();
+        dfs(res,list,visit,num);
+        return res;
+    }
+
+    public void dfs(ArrayList<ArrayList<Integer>> res,ArrayList<Integer> list,boolean[] visit,int[] num){
+        if (list.size() == num.length){
+            res.add(new ArrayList<>(list));
+        }
+        for (int i = 0;i < num.length;i++){
+            if (visit[i] == true || (i != 0 && num[i] == num[i-1]) && visit[i-1] == false){
+                continue;
+            }
+            visit[i] = true;
+            list.add(num[i]);
+            dfs(res, list, visit, num);
+            list.remove(list.size() - 1);
+            visit[i] = false;
         }
     }
 }
