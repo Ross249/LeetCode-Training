@@ -1231,4 +1231,156 @@ public class TemplateMediumMode {
             visit[i] = false;
         }
     }
+
+    // NC-111
+    public String solve (int[] nums) {
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0;i < nums.length;i++){
+            list.add(String.valueOf(nums[i]));
+        }
+        Collections.sort(list, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return (o2 + o1).compareTo(o1 + o2);
+            }
+        });
+
+        if (list.get(0).equals("0")){
+            return "0";
+        }
+        StringBuilder res = new StringBuilder();
+        for (int i = 0;i < list.size();i++){
+            res.append(list.get(i));
+        }
+        return res.toString();
+    }
+
+    // NC-27
+    ArrayList<ArrayList<Integer>> res2 = new ArrayList<>();
+    public ArrayList<ArrayList<Integer>> subsets(int[] S) {
+        LinkedList<Integer> track = new LinkedList<>();
+        dfs(S,track,0);
+        return res2;
+    }
+
+    public void dfs(int[] S,LinkedList<Integer> track,int start){
+        res2.add(new ArrayList<>(track));
+        for (int i = start;i < S.length;i++){
+            track.add(S[i]);
+            dfs(S, track, i+1);
+            track.removeLast();
+        }
+    }
+
+    // NC-46
+    public ArrayList<ArrayList<Integer>> combinationSum2(int[] num, int target) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        ArrayList<Integer> tmp = new ArrayList<>();
+        if (num == null || num.length == 0 || target < 0){
+            return res;
+        }
+        Arrays.sort(num);
+        dfs(res,tmp,target,num,0);
+        return res;
+    }
+
+    public void dfs(ArrayList<ArrayList<Integer>> res,ArrayList<Integer> tmp,int target,int[] num,int start){
+        if (target == 0){
+            res.add(new ArrayList<>(tmp));
+            return;
+        }
+
+        if (start >= num.length){
+            return;
+        }
+        for (int i = start;i < num.length;i++){
+            if (i > start && num[i] == num[i - 1]){
+                continue;
+            }
+            if (num[i] <= target){
+                tmp.add(num[i]);
+                dfs(res,tmp,target-num[i],num,i+1);
+                tmp.remove(tmp.size() - 1);
+            }
+        }
+        return;
+    }
+
+    // NC-99
+    List<List<Integer>> graph = new ArrayList<>();
+    Map<Integer,Map<Integer,Integer>> table = new HashMap<>();
+    int maxEdge = 0;
+    int maxIndex = -1;
+    public int solve (int n, Interval[] Tree_edge, int[] Edge_value) {
+        for (int i = 0;i < n;i++){
+            graph.add(new ArrayList<Integer>());
+        }
+        for (int i = 0;i < Tree_edge.length;i++){
+            Interval edge = Tree_edge[i];
+            graph.get(edge.start).add(edge.end);
+            graph.get(edge.end).add(edge.start);
+            if (!table.containsKey(edge.start)){
+                table.put(edge.start,new HashMap<Integer,Integer>());
+            }
+            table.get(edge.start).put(edge.end,Edge_value[i]);
+            if (!table.containsKey(edge.end)){
+                table.put(edge.end,new HashMap<Integer, Integer>());
+            }
+            table.get(edge.end).put(edge.start,Edge_value[i]);
+        }
+
+        dfs(0,0,-1);
+        dfs(0,maxIndex,-1);
+
+        return maxEdge;
+    }
+
+    public void dfs(int count,int node,int parent){
+        List<Integer> cur = graph.get(node);
+        for (int i = 0;i < cur.size();i++){
+            if(cur.get(i) == parent){
+                continue;
+            }
+            int value = table.get(node).get(cur.get(i));
+            dfs(count+value,cur.get(i),node);
+        }
+        if (count > maxEdge){
+            maxEdge = count;
+            maxIndex = node;
+        }
+    }
+
+    // NC-10
+    public String solve1 (String s, String t) {
+        int len1 = s.length();
+        int len2 = t.length();
+
+        int[] num1 = new int[len1];
+        int[] num2 = new int[len2];
+
+        for (int i = 0;i < len1;i++){
+            num1[i] = s.charAt(i) - '0';
+        }
+        for (int i = 0;i < len2;i++){
+            num2[i] = t.charAt(i) - '0';
+        }
+
+        int[] res = new int[len1 + len2];
+        for (int i = 0;i < len1;i++){
+            for (int j = 0;j < len2;j++){
+                res[i+j] += num1[i] * num2[j];
+            }
+        }
+
+        for (int k = res.length - 1;k > 0;k--){
+            res[k-1] += res[k] / 10;
+            res[k] = res[k] % 10;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0;i < res.length - 1;i++){
+            sb.append(res[i]);
+        }
+        return sb.toString();
+    }
 }
