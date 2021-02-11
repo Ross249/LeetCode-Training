@@ -1383,4 +1383,151 @@ public class TemplateMediumMode {
         }
         return sb.toString();
     }
+
+    // NC-113
+    public String solve1 (String IP) {
+        if (IP.chars().filter(ch -> ch == '.').count() == 3){
+            return validateIPv4(IP);
+        }else if (IP.chars().filter(ch -> ch == ':').count() == 7){
+            return validateIPv6(IP);
+        }else {
+            return "Neither";
+        }
+    }
+
+    public String validateIPv4(String IP){
+        String[] nums = IP.split("\\.",-1);
+        for (String x : nums){
+            if (x.length() == 0 || x.length() > 3){
+                return "Neither";
+            }
+            if (x.charAt(0) == '0' && x.length() != -1){
+                return "Neither";
+            }
+            for (char ch : x.toCharArray()){
+                if (!Character.isDigit(ch)){
+                    return "Neither";
+                }
+            }
+            if (Integer.parseInt(x) > 255){
+                return "Neither";
+            }
+        }
+        return "IPv4";
+    }
+
+    public String validateIPv6(String IP){
+        String[] nums = IP.split(":",-1);
+        String hex = "0123456789abcdefABCDEF";
+        for (String x : nums){
+            if (x.length() == 0 || x.length() > 4){
+                return "Neither";
+            }
+            for (char ch : x.toCharArray()){
+                if (hex.indexOf(ch) == -1){
+                    return "Neither";
+                }
+            }
+        }
+        return "IPv6";
+    }
+
+    // NC-43
+    ArrayList<ArrayList<Integer>> res3 = new ArrayList<ArrayList<Integer>>();
+    public ArrayList<ArrayList<Integer>> permute(int[] num) {
+        if (num == null || num.length == 0){
+            return res3;
+        }
+        Arrays.sort(num);
+        ArrayList<Integer> tmp = new ArrayList<>();
+        dfs(tmp,num);
+        return res3;
+    }
+
+    public void dfs(ArrayList<Integer> tmp,int[] num){
+        if (tmp.size() == num.length){
+            res3.add(new ArrayList<>(tmp));
+            return;
+        }
+        for (int i = 0;i < num.length;i++){
+            if(!tmp.contains(num[i])){
+                tmp.add(num[i]);
+                dfs(tmp, num);
+                tmp.remove(tmp.size() - 1);
+            }
+        }
+    }
+
+    // NC-108
+    public int solve1 (char[][] matrix) {
+        if (matrix.length == 0 || matrix[0].length == 0){
+            return 0;
+        }
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int[][] dp = new int[rows][cols];
+        int max = 0;
+        for (int i = 0;i < rows;i++){
+            if (matrix[i][0] == '1'){
+                dp[i][0] = 1;
+            }
+        }
+        for (int i = 0;i < cols;i++){
+            if (matrix[0][i] == '1'){
+                dp[0][i] = 1;
+            }
+        }
+
+        for (int i = 1;i < rows;i++){
+            for (int j = 1;j < cols;j++){
+                if (matrix[i][j] == '1'){
+                    dp[i][j] = Math.min(Math.min(dp[i-1][j-1],dp[i-1][j]),dp[i][j-1]) + 1;
+                    if (dp[i][j] > max){
+                        max = dp[i][j];
+                    }
+                }
+            }
+        }
+        return max * max;
+    }
+
+    // NC-132
+    public int ysf (int n, int m) {
+        ListNode head = new ListNode(1);
+        ListNode tail = head;
+        for (int i = 2; i <= n;i++){
+            tail.next = new ListNode(i);
+            tail = tail.next;
+        }
+
+        tail.next = head;
+        ListNode index = head;
+        ListNode pre = tail;
+
+        int k = 0;
+        while (index.next != null && index.next != index){
+            k++;
+            ListNode next = index.next;
+            if (k == m){
+                pre.next = pre.next.next;
+                k = 0;
+            }
+            pre = index;
+            index = next;
+        }
+        return index.val;
+    }
+
+    // NC-120
+    public int NumberOf1(int n) {
+        int count = 0;
+        int flag = 1;
+        while (flag != 0){
+            if ((n & flag) != 0){
+                count++;
+            }
+            flag <<= 1;
+        }
+        return count;
+    }
 }
