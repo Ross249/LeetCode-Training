@@ -1530,4 +1530,172 @@ public class TemplateMediumMode {
         }
         return count;
     }
+
+    // NC-131
+    public double[] flowmedian (int[][] operations) {
+        ArrayList<Double> arr = new ArrayList<>();
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2.compareTo(o1);
+            }
+        });
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1.compareTo(o2);
+            }
+        });
+
+        for (int[] op : operations){
+            if (op[0] == 1){
+                if (maxHeap.isEmpty() || maxHeap.peek() > op[1]){
+                    maxHeap.add(op[1]);
+                }else {
+                    minHeap.add(op[1]);
+                }
+                if (minHeap.size() == maxHeap.size() + 2){
+                    maxHeap.add(minHeap.poll());
+                }
+                if (minHeap.size() + 2 == maxHeap.size()){
+                    minHeap.add(maxHeap.poll());
+                }
+            }else {
+                if (maxHeap.size() == 0){
+                    double ans = -1;
+                    arr.add(ans);
+                    continue;
+                }
+                if (maxHeap.size() == minHeap.size()){
+                    double num1 = maxHeap.peek();
+                    double num2 = minHeap.peek();
+                    arr.add((num1 + num2) / 2);
+                }else if (maxHeap.size() > minHeap.size()){
+                    double num1 = maxHeap.peek();
+                    arr.add(num1);
+                }else {
+                    double num1 = minHeap.peek();
+                    arr.add(num1);
+                }
+            }
+        }
+
+        double[] arrs = new double[arr.size()];
+        for (int i = 0;i < arrs.length;i++){
+            arrs[i] = arr.get(i);
+        }
+        return arrs;
+    }
+
+    // NC-124
+    public String[] trieU (String[][] operators) {
+        HashMap<String,Integer> dict = new HashMap<>();
+        ArrayList<String> res = new ArrayList<>();
+        for (int i = 0;i < operators.length;i++){
+            String op = operators[i][0];
+            String str = operators[i][1];
+            if (op.equals("1")){
+                if (dict.containsKey(str)){
+                    dict.put(str,dict.get(str) + 1);
+                }else {
+                    dict.put(str,1);
+                }
+            }else if (op.equals("2")){
+                if (dict.get(str) == 1 ){
+                    dict.remove(str);
+                }else {
+                    dict.put(str, dict.get(str) - 1);
+                }
+            }else if (op.equals("3")){
+                if (dict.containsKey(str)){
+                    res.add("YES");
+                }else {
+                    res.add("NO");
+                }
+            }else if (op.equals("4")){
+                int count = 0;
+                for (String key : dict.keySet()){
+                    if (key.startsWith(str)){
+                        count++;
+                    }
+                }
+                res.add(""+ count);
+            }
+        }
+        int n = res.size();
+        String[] res2 = new String[n];
+        for (int i = 0;i < n;i++){
+            res2[i] = res.get(i);
+        }
+        return res2;
+    }
+
+    // NC-80
+    ArrayList<ArrayList<Integer> > Print(TreeNode pRoot) {
+        ArrayList<ArrayList<Integer> > res = new ArrayList<>();
+        if (pRoot == null){
+            return res;
+        }
+        ArrayList<Integer> list;
+        Queue<TreeNode> queue = new LinkedList<>();
+        TreeNode cur;
+        queue.offer(pRoot);
+        while (!queue.isEmpty()){
+            list = new ArrayList<>();
+            int size = queue.size();
+            while (size > 0){
+                cur = queue.poll();
+                list.add(cur.val);
+                if (cur.left != null){
+                    queue.offer(cur.left);
+                }
+                if (cur.right != null){
+                    queue.offer(cur.right);
+                }
+                size--;
+            }
+            res.add(list);
+        }
+        return res;
+    }
+
+    // NC-29
+    public boolean searchMatrix (int[][] matrix, int target) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int i = 0,j = n-1;
+        while (i < m && j >= 0){
+            if (matrix[i][j] == target){
+                return true;
+            }else if (matrix[i][j] > target){
+                j--;
+            }else {
+                i++;
+            }
+        }
+        return false;
+    }
+
+    // NC-116
+    public int solve2 (String nums) {
+        if (nums.length() == 0 || nums.charAt(0) == '0'){
+            return 0;
+        }
+        int[] dp = new int[nums.length()];
+        dp[0] = 1;
+        for (int i = 1;i < dp.length;i++){
+            if (nums.charAt(i) != '0'){
+                dp[i] = dp[i-1];
+            }
+            int num = (nums.charAt(i-1)-'0') * 10 + (nums.charAt(i)-'0');
+            if (num >= 10 && num <= 26){
+                if (i == 1){
+                    dp[i] += 1;
+                }else {
+                    dp[i] += dp[i-2];
+                }
+            }
+        }
+        return dp[dp.length - 1];
+    }
 }
