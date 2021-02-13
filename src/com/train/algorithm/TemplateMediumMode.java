@@ -1698,4 +1698,154 @@ public class TemplateMediumMode {
         }
         return dp[dp.length - 1];
     }
+
+    // NC-83
+    public double maxProduct(double[] arr) {
+        double min = arr[0];
+        double max = min;
+        double res = min;
+        for (int i = 1;i < arr.length;i++){
+            double tmp = max;
+            max = Math.max(Math.max(arr[i],arr[i] * max),min * arr[i]);
+            min = Math.min(Math.min(arr[i],arr[i] * min),tmp * arr[i]);
+            res = Math.max(res,max);
+        }
+        return res;
+    }
+
+    // NC-143
+    public int[][] solve (int[][] a, int[][] b) {
+        int m = a.length;
+        int p = a[0].length;
+        int n = b[0].length;
+        int[][] res = new int[m][n];
+        for (int i = 0;i < m;i++){
+            for (int j = 0;j < n;j++){
+                int t = 0;
+                for (int k = 0;k < p;k++){
+                    t += a[i][k] * b[k][j];
+                }
+                res[i][j] = t;
+            }
+        }
+        return res;
+    }
+
+    // NC-138
+    public int solve (int[][] matrix) {
+        if (matrix.length == 0){
+            return 0;
+        }
+        int[][] visited = new int[matrix.length][matrix[0].length];
+        int max = 0;
+        for (int i = 0;i < matrix.length;i++){
+            for (int j = 0;j < matrix[0].length;j++){
+                if (visited[i][j] == 0){
+                    max = Math.max(max,dfs(i,j,matrix,visited));
+                }
+            }
+        }
+        return max;
+    }
+
+    public int dfs(int i,int j,int[][] matrix,int[][] visited){
+        if (i < 0 || i >= matrix.length || j < 0 || j >= matrix[0].length){
+            return 0;
+        }
+        if (visited[i][j] > 0){
+            return visited[i][j];
+        }
+        int max = 0;
+        if (i - 1 >= 0 && matrix[i-1][j] < matrix[i][j]){
+            max = Math.max(max,dfs(i-1,j,matrix,visited));
+        }
+        if (i + 1 < matrix.length && matrix[i+1][j] < matrix[i][j]){
+            max = Math.max(max,dfs(i+1,j,matrix,visited));
+        }
+        if (j - 1 >= 0 && matrix[i][j-1] < matrix[i][j]){
+            max = Math.max(max,dfs(i,j-1,matrix,visited));
+        }
+        if (j + 1 < matrix[0].length && matrix[i][j+1] < matrix[i][j]){
+            max = Math.max(max,dfs(i,j+1,matrix,visited));
+        }
+        visited[i][j] = max + 1;
+        return max + 1;
+    }
+
+    // NC-64
+    TreeNode pre = null;
+    public TreeNode Convert(TreeNode pRootOfTree) {
+        if (pRootOfTree == null){
+            return null;
+        }
+        Convert(pRootOfTree.right);
+        if (pre != null){
+            pRootOfTree.right = pre;
+            pre.left = pRootOfTree;
+        }
+        pre = pRootOfTree;
+        Convert(pRootOfTree.left);
+        return pre;
+    }
+
+    /**
+     * 另外解法
+     * @param pRootOfTree
+     * @return
+     */
+    public TreeNode Convert1(TreeNode pRootOfTree) {
+        if (pRootOfTree == null){
+            return null;
+        }
+        ArrayList<TreeNode> list = new ArrayList<>();
+        Convert1(list,pRootOfTree);
+        return Convert1(list);
+    }
+
+    public void Convert1(ArrayList<TreeNode> list,TreeNode root){
+        if (root != null){
+            Convert1(list,root.left);
+            list.add(root);
+            Convert1(list,root.right);
+        }
+    }
+
+    public TreeNode Convert1(ArrayList<TreeNode> list){
+        TreeNode head = list.get(0);
+        TreeNode cur = head;
+        for (int i = 1; i < list.size();i++){
+            TreeNode node = list.get(i);
+            node.left  = cur;
+            cur.right = node;
+            cur = node;
+        }
+        return head;
+    }
+
+    // NC-142
+    public int solve3 (String a) {
+        if (a == null || a.length() <= 1){
+            return 0;
+        }
+        char[] chars=  a.toCharArray();
+        int len = chars.length;
+        int maxLen = chars.length / 2;
+        for (int i = maxLen;i >= 1;i--){
+            for (int j = 0;j <= len - 2 * i;j++){
+                if (check(chars,j,i)){
+                    return 2 * i;
+                }
+            }
+        }
+        return 0;
+    }
+
+    public boolean check(char[] chars,int start,int len){
+        for (int i = start;i < start + len;i++){
+            if (chars[i] != chars[i + len]){
+                return false;
+            }
+        }
+        return true;
+    }
 }
