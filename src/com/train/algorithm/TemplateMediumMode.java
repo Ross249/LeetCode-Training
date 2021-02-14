@@ -1848,4 +1848,101 @@ public class TemplateMediumMode {
         }
         return true;
     }
+
+    // NC-135
+    public int maxProfit (int[] prices) {
+        if (prices.length == 0){
+            return 0;
+        }
+        int[][] dp = new int[prices.length][5];
+        dp[0][1] = -prices[0];
+        dp[0][3] = -prices[0];
+        for (int i = 0;i < prices.length;i++){
+            dp[i][0] = dp[i-1][0];
+            dp[i][1] = Math.max(dp[i-1][1],dp[i-1][0]-prices[i]);
+            dp[i][2] = Math.max(dp[i-1][2],dp[i-1][1]+prices[i]);
+            dp[i][3] = Math.max(dp[i-1][3],dp[i-1][2]-prices[i]);
+            dp[i][4] = Math.max(dp[i-1][4],dp[i-1][3]+prices[i]);
+        }
+        return dp[prices.length-1][4];
+    }
+
+    // NC-139
+    public int LastRemaining_Solution(int n, int m) {
+        if (n < 1 || m < 1){
+            return -1;
+        }
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0;i < n;i++){
+            list.add(i);
+        }
+        int cur = -1;
+        while (list.size() > 1){
+            for (int i = 0;i < m;i++){
+                cur++;
+                if (cur == list.size()){
+                    cur = 0;
+                }
+            }
+            list.remove(cur);
+            cur--;
+        }
+        return list.get(0);
+    }
+
+    // NC-84
+    public int nodeNum(TreeNode head) {
+        if (head == null){
+            return 0;
+        }
+        return 1 + dfs(head.left) + dfs(head.right);
+    }
+
+    public int dfs(TreeNode head){
+        if (head == null){
+            return 0;
+        }
+        int level = 0;
+        TreeNode l = head,r = head;
+        while (l != null && r!= null){
+            level++;
+            l = l.left;
+            r = r.right;
+        }
+        if (l == null && r != null){
+            return (1 << level) - 1;
+        }else {
+            return 1 + dfs(head.left) + dfs(head.right);
+        }
+    }
+
+    // NC-104
+    public int compare (String version1, String version2) {
+        String[] str1 = version1.split("\\.");
+        String[] str2 = version2.split("\\.");
+        int n = Math.max(str1.length,str2.length);
+        for (int i = 0;i < n;i++){
+            int x = i < str1.length ? Integer.valueOf(str1[i]) : 0;
+            int y = i < str2.length ? Integer.valueOf(str2[i]) : 0;
+            if (x < y){
+                return -1;
+            }else if (x > y){
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    // NC-129
+    public long thenumberof0 (long n) {
+        if (n < 1){
+            return 0;
+        }
+        long res = 0;
+        while (n != 0){
+            res = res + n / 5;
+            n /= 5;
+        }
+        return res;
+    }
 }
