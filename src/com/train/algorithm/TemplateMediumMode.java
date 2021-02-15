@@ -1857,7 +1857,7 @@ public class TemplateMediumMode {
         int[][] dp = new int[prices.length][5];
         dp[0][1] = -prices[0];
         dp[0][3] = -prices[0];
-        for (int i = 0;i < prices.length;i++){
+        for (int i = 1;i < prices.length;i++){
             dp[i][0] = dp[i-1][0];
             dp[i][1] = Math.max(dp[i-1][1],dp[i-1][0]-prices[i]);
             dp[i][2] = Math.max(dp[i-1][2],dp[i-1][1]+prices[i]);
@@ -1944,5 +1944,104 @@ public class TemplateMediumMode {
             n /= 5;
         }
         return res;
+    }
+
+    // NC-130
+    public int candy (int[] arr) {
+        int[] tmp = new int[arr.length];
+        Arrays.fill(tmp,1);
+        int count = 0;
+        for (int i = 1;i < arr.length;i++){
+            if (arr[i] > arr[i-1]){
+                tmp[i] = tmp[i-1] + 1;
+            }
+        }
+
+        for (int i = arr.length - 1;i > 0;i--){
+            if (arr[i-1] > arr[i]){
+                tmp[i-1] = Math.max(tmp[i-1] ,tmp[i] + 1);
+            }
+        }
+
+        for (int i : tmp){
+            count += i;
+        }
+        return count;
+    }
+
+    // NC-23
+    public ListNode partition (ListNode head, int x) {
+        if (head == null){
+            return head;
+        }
+        ListNode head1 = new ListNode(0);
+        ListNode head2 = new ListNode(0);
+        ListNode node1 = head1;
+        ListNode node2 = head2;
+        ListNode tmp = head;
+        while (tmp != null){
+            if (tmp.val < x){
+                node1.next = tmp;
+                node1 = tmp;
+            }else {
+                node2.next = tmp;
+                node2 = tmp;
+            }
+            tmp = tmp.next;
+        }
+        node2.next = null;
+        node1.next = head2.next;
+        return head1.next;
+    }
+
+    // NC-115
+    public int[] solve3 (int[] a) {
+        Stack<Integer> stack = new Stack<>();
+        ArrayList<Integer> list = new ArrayList<>();
+        int n = a.length;
+        int[] maxs = new int[n];
+        int max = Integer.MIN_VALUE;
+        for (int i = n-1;i >= 0;i--){
+            max = Math.max(a[i],max);
+            maxs[i] = max;
+        }
+
+        for (int i = 0;i < n;i++){
+            stack.push(a[i]);
+            while (!stack.isEmpty() && i < n-1 && stack.peek() > maxs[i+1]){
+                list.add(stack.pop());
+            }
+        }
+        while (!stack.isEmpty()){
+            list.add(stack.pop());
+        }
+        int[] res = new int[n];
+        for (int i = 0;i < n;i++){
+            res[i] = list.get(i);
+        }
+        return res;
+    }
+
+    // NC-34
+    public int minPathSum1 (int[][] grid) {
+        if (grid == null){
+            return 0;
+        }
+        int row = grid.length;;
+        int col = grid[0].length;
+        int[][] dp = new int[row][col];
+        dp[0][0] = grid[0][0];
+        for (int i = 1;i < row;i++){
+            dp[i][0] = dp[i-1][0] + grid[i][0];
+        }
+        for (int i = 1;i < col;i++){
+            dp[0][i] = dp[0][i-1] + grid[0][i];
+        }
+        for (int i = 1;i < row;i++){
+            for (int j = 1;j < col;j++){
+                dp[i][j] = Math.min(dp[i-1][j],dp[i][j-1]) + grid[i][j];
+            }
+        }
+        return dp[row-1][col-1];
     }
 }
