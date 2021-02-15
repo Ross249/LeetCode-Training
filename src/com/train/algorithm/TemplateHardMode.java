@@ -1,5 +1,9 @@
 package com.train.algorithm;
 
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
 public class TemplateHardMode {
     public class ListNode {
         int val;
@@ -28,5 +32,20 @@ public class TemplateHardMode {
         }
     }
 
-
+    // NC-119
+    public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
+        ArrayList<Integer> res = new ArrayList<>();
+        while (input == null || k <= 0 || k > input.length){
+            return res;
+        }
+        Queue<Integer> queue = new PriorityQueue<>();
+        for (int in : input){
+            queue.add(in);
+        }
+        while (0 < k){
+            res.add(queue.poll().intValue());
+            k--;
+        }
+        return res;
+    }
 }
