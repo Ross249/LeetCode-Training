@@ -205,4 +205,151 @@ public class TemplateHardMode {
         }
         return dp[m][n];
     }
+
+    // NC-6
+    int res1 = Integer.MIN_VALUE;
+    public int maxPathSum (TreeNode root) {
+        getMax(root);
+        return res1;
+    }
+
+    public int getMax(TreeNode root){
+        if (root == null){
+            return 0;
+        }
+        int leftMax = Math.max(0,getMax(root.left));
+        int rightMax = Math.max(0,getMax(root.right));
+        res1 = Math.max(res1,Math.max(root.val + Math.max(leftMax,rightMax), root.val+ leftMax + rightMax));
+        return Math.max(leftMax , rightMax) + root.val;
+    }
+
+    // NC-100
+    public int atoi (String str) {
+        if (str.isEmpty()){
+            return 0;
+        }
+        str = str.replaceAll(" ","");
+        char first = '0';
+        char last = '9';
+        int count = 0;
+        int negative = 0;
+        int positive = 0;
+        int[] res = new int[100];
+        double val = 0;
+        for (int i = 0;i < str.length();i++){
+            char tmp = str.charAt(i);
+            if (tmp >= first && tmp <= last){
+                res[count] = tmp - '0';
+                count++;
+            }else if (count == 0 && (tmp == '+' || tmp == '-')){
+                if (tmp == '+'){
+                    positive = 1;
+                }else if (tmp == '-'){
+                    negative = 1;
+                }
+            }else {
+                break;
+            }
+        }
+
+        for (int i = 0;i < count;i++){
+            double tmp = 1;
+            for (int j = count -1 -i;j>0;j--){
+                tmp = tmp * 10;
+            }
+            val = res[i] * tmp + val;
+        }
+        if (negative == 1){
+            val = -val;
+        }
+        if (val >= Integer.MAX_VALUE){
+            return Integer.MAX_VALUE;
+        }
+        if (val <= Integer.MIN_VALUE){
+            return Integer.MIN_VALUE;
+        }
+        return (int) val;
+    }
+
+    // NC-49
+    public int longestValidParentheses (String s) {
+//        int len = s.length();
+//        int[] dp = new int[len];
+//        int max = 0;
+//        for (int i = 1;i < len;i++){
+//            if (s.charAt(i) == ')'){
+//                int pre = i - 1 - dp[i-1];
+//                if (pre >= 0 && s.charAt(pre) == '('){
+//                    dp[i] = dp[i-1] + 1;
+//                    if (pre - 1 >= 0){
+//                        dp[i] += dp[pre-1];
+//                    }
+//                }
+//            }
+//            max = Math.max(dp[i],max);
+//        }
+//        return max;
+        int max = 0;
+        Deque<Integer> stack = new LinkedList<>();
+        stack.push(-1);
+        for (int i = 0;i < s.length();i++){
+            if (s.charAt(i) == '('){
+                stack.push(i);
+            }else {
+                stack.pop();
+                if (stack.isEmpty()){
+                    stack.push(i);
+                }else {
+                    max = Math.max(max,i - stack.peek());
+                }
+            }
+        }
+        return max;
+    }
+
+    // NC-82
+    ArrayList<Integer> result = new ArrayList<>();
+    PriorityQueue<Integer> queue1 = new PriorityQueue<>((o1, o2) -> o2-o1);
+    public ArrayList<Integer> maxInWindows(int [] num, int size){
+        if (num == null || num.length <= 0 || size <= 0 || size > num.length){
+            return result;
+        }
+        int count = 0;
+        for (;count < size;count++){
+            queue1.offer(num[count]);
+        }
+        while (count < num.length){
+            result.add(queue1.peek());
+            queue1.remove(num[count - size]);
+            queue1.add(num[count]);
+            count++;
+        }
+        result.add(queue1.peek());
+        return result;
+    }
+
+    // NC-123
+    int index = -1;
+    String Serialize(TreeNode root) {
+        if (root == null){
+            return "#";
+        }else {
+            return root.val + "," + Serialize(root.left) + "," + Serialize(root.right);
+        }
+    }
+    TreeNode Deserialize(String str) {
+        String[] s = str.split(",");
+        index++;
+        int len = s.length;
+        if (index > len){
+            return null;
+        }
+        TreeNode treeNode = null;
+        if (!s[index].equals("#")){
+            treeNode = new TreeNode(Integer.parseInt(s[index]));
+            treeNode.left = Deserialize(str);
+            treeNode.right = Deserialize(str);
+        }
+        return treeNode;
+    }
 }
