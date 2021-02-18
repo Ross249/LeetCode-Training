@@ -3,6 +3,18 @@ package com.train.algorithm;
 import java.util.*;
 
 public class TemplateHardMode {
+    public class Node{
+        int key;
+        int value;
+        int frep=1;
+        public Node(){
+        }
+        public Node(int key,int value){
+            this.key = key;
+            this.value = value;
+        }
+    }
+
     public class ListNode {
         int val;
         ListNode next = null;
@@ -351,5 +363,195 @@ public class TemplateHardMode {
             treeNode.right = Deserialize(str);
         }
         return treeNode;
+    }
+
+    // NC-95
+    public int MLS (int[] arr) {
+        HashMap<Integer,Integer> map = new HashMap<>();
+        int max = 0;
+        for (int a : arr){
+            if (!map.containsKey(a)){
+                int left = map.getOrDefault(a-1,0);
+                int right = map.getOrDefault(a+1,0);
+                int sum = left + right + 1;
+                map.put(a,sum);
+                map.put(a-left,sum);
+                map.put(a+right,sum);
+                max = Math.max(max,sum);
+            }
+        }
+        return max;
+    }
+
+    // NC-94
+    Map<Integer,Node> cache;
+    Map<Integer,LinkedHashSet<Node>> freqMap;
+    int size;
+    int capacity;
+    int min;
+    public int[] LFU (int[][] operators, int k) {
+        this.capacity = k;
+        cache = new HashMap<>();
+        freqMap = new HashMap<>();
+        List<Integer> out = new ArrayList<>();
+        for (int i = 0;i < operators.length;i++){
+            if (operators[i][0] == 1){
+                put(operators[i][1],operators[i][2]);
+            }else if (operators[i][0] == 2){
+                out.add(get(operators[i][1]));
+            }
+        }
+        int[] res = new int[out.size()];
+        for (int i = 0;i < out.size();i++){
+            res[i] = out.get(i);
+        }
+        return res;
+    }
+
+    public int get(int key){
+        Node node = cache.get(key);
+        if (node == null){
+            return -1;
+        }
+        freqInc(node);
+        return node.value;
+    }
+
+    public void put(int key,int value){
+        if (capacity == 0){
+            return;
+        }
+        Node node = cache.get(key);
+        if (node != null){
+            node.value = value;
+            freqInc(node);
+        }else {
+            if (size == capacity){
+                Node deadNode = removeNode();
+                cache.remove(deadNode.key);
+                size--;
+            }
+            node = new Node(key,value);
+            cache.put(key,node);
+            addNode(node);
+            size++;
+        }
+    }
+
+    public void freqInc(Node node){
+        int freq = node.frep;
+        LinkedHashSet<Node> set = freqMap.get(freq);
+        set.remove(node);
+        if (freq == min && set.size() == 0){
+            min = freq + 1;
+        }
+        node.frep++;
+        LinkedHashSet<Node> newSet = freqMap.computeIfAbsent(freq+1,k -> new LinkedHashSet<>());
+        newSet.add(node);
+    }
+
+    public Node removeNode(){
+        LinkedHashSet<Node> set = freqMap.get(min);
+        Node deadNode = set.iterator().next();
+        set.remove(deadNode);
+        return deadNode;
+    }
+
+    public void addNode(Node node){
+        LinkedHashSet<Node> set = freqMap.computeIfAbsent(1,k -> new LinkedHashSet<>());
+        set.add(node);
+        min = 1;
+    }
+
+    // NC-28
+    public String minWindow (String S, String T) {
+        if (S == null || S == "" || T == null || T == "" || S.length() < T.length() ){
+            return "";
+        }
+        int[] needs = new int[128];
+        int[] widow = new int[128];
+        for (int i = 0;i < T.length();i++){
+            needs[T.charAt(i)]++;
+        }
+        int left = 0;
+        int right = 0;
+        String res = "";
+        int count = 0;
+        int minLength = S.length() + 1;
+        while (right < S.length()){
+            char ch = S.charAt(right);
+            widow[ch]++;
+            if (needs[ch] > 0 && needs[ch] >= widow[ch]){
+                count++;
+            }
+            while (count == T.length()){
+                ch = S.charAt(left);
+                if (needs[ch] > 0 && needs[ch] >= widow[ch]){
+                    count--;
+                }
+                if (right - left + 1< minLength){
+                    minLength = right - left + 1;
+                    res = S.substring(left,right + 1);
+                }
+                widow[ch]--;
+                left++;
+            }
+            right++;
+        }
+        return res;
+    }
+
+    // NC-122
+    public boolean match(char[] str, char[] pattern) {
+        int m = str.length + 1,n = pattern.length + 1;
+        boolean[][] dp = new boolean[m][n];
+        dp[0][0] = true;
+        for (int j = 2;j < n;j+=2){
+            dp[0][j] = dp[0][j-2] && pattern[j-1] == '*';
+        }
+        for (int i = 1;i < m;i++){
+            for (int j = 1;j < n;j++){
+                dp[i][j] = pattern[j-1] == '*' ?
+                        dp[i][j-2]||dp[i][j-1]||dp[i-1][j]&&(str[i-1] == pattern[j-2])||pattern[j-2]=='.':
+                        dp[i-1][j-1] && (pattern[j-1] == '.' || str[i-1] == pattern[j-1]);
+            }
+        }
+        return dp[m-1][n-1];
+    }
+
+    // NC-39
+    int result1;
+    public int Nqueen (int n) {
+        result1 = 0;
+        dfs(new int[n],0);
+        return result1;
+    }
+    public void dfs(int[] nums,int cur){
+        int n = nums.length;
+        if (cur == n){
+            result1++;
+            return;
+        }
+        boolean[] visited = new boolean[n];
+        for (int i = 0;i < cur;i++){
+            int e = cur - i;
+            int v = nums[i];
+            int r = v + e;
+            int l = v - e;
+            visited[v] = true;
+            if (l >= 0){
+                visited[l] = true;
+            }
+            if (r < n){
+                visited[r] = true;
+            }
+        }
+        for (int i = 0;i < n;i++){
+            if (visited[i]){
+                continue;
+            }
+            nums[cur] = i;
+            dfs(nums,cur+1);
+        }
     }
 }
