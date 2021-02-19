@@ -9,3 +9,4 @@
 8. [牛客：入门、简单](https://github.com/Ross249/LeetCode-Training/blob/master/src/com/train/algorithm/TemplateEasyMode.java)
 9. [牛客：中等](https://github.com/Ross249/LeetCode-Training/blob/master/src/com/train/algorithm/TemplateMediumMode.java)
 10. [牛客：较难、困难](https://github.com/Ross249/LeetCode-Training/blob/master/src/com/train/algorithm/TemplateHardMode.java)
+11. [设计模式](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/designPattern)
