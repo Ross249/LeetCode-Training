@@ -554,4 +554,116 @@ public class TemplateHardMode {
             dfs(nums,cur+1);
         }
     }
+
+    // NC-44
+    public boolean isMatch(String s, String p) {
+        int row = s.length();
+        int col = p.length();
+        boolean[][] dp = new boolean[row + 1][col + 1];
+        dp[0][0] = true;
+        for (int j = 1;j < col + 1;j++){
+            if (dp[0][j-1]){
+                if (p.charAt(j-1) == '*'){
+                    dp[0][j] = true;
+                }else {
+                    break;
+                }
+            }
+        }
+        for (int i = 0;i < row;i++){
+            for (int j = 0;j < col;j++){
+                if (p.charAt(j) == s.charAt(i) || p.charAt(j) == '?'){
+                    dp[i+1][j+1] = dp[i][j];
+                }else if (p.charAt(j) == '*'){
+                    dp[i+1][j+1] = dp[i][j] || dp[i+1][j] || dp[i][j+1];
+                }
+            }
+        }
+        return dp[row][col];
+    }
+
+    // NC-47
+    public void solveSudoku(char[][] board) {
+        dfs(board,0,0);
+    }
+
+    public boolean dfs(char[][] board,int x,int y){
+        if (x == 9){
+            return true;
+        }
+        if (y == 9){
+            return dfs(board, x+1, 0);
+        }
+        if (board[x][y] != '.'){
+            return dfs(board,x,y+1);
+        }
+        for (char c = '1';c <= '9';++c){
+            if (!isValid(board,x,y,c)){
+                continue;
+            }
+            board[x][y] = c;
+            if (dfs(board, x, y+1)){
+                return true;
+            }
+            board[x][y] = '.';
+        }
+        return false;
+    }
+
+    public boolean isValid(char[][] board,int x,int y,char ch){
+        for (int i = 0;i < 9;++i){
+            if (board[x][i] == ch){
+                return false;
+            }
+            if (board[i][y] == ch){
+                return false;
+            }
+            if (board[(x/3)*3+i/3][(y/3)*3+i%3] == ch){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // NC-118
+    int count;
+    public int InversePairs(int [] array) {
+        if (array == null || array.length == 0){
+            return 0;
+        }
+        MergeSort(array,0,array.length-1);
+        return count;
+    }
+
+    public void MergeSort(int[] arr,int start,int end){
+        if (start >= end){
+            return;
+        }
+        int mid = (start + end) / 2;
+        MergeSort(arr, start, mid);
+        MergeSort(arr, mid + 1, end);
+        Merge(arr,start,mid,end);
+    }
+
+    public void Merge(int[] arr,int start,int mid,int end){
+        int[] tmp = new int[end - start + 1];
+        int k = 0,i = start,j = mid + 1;
+        while (i <= mid && j <= end){
+            if (arr[i] <= arr[j]){
+                tmp[k++] = arr[i++];
+            }else {
+                tmp[k++] = arr[j++];
+                count = (count + (mid + 1 - i)) % 1000000007;
+            }
+        }
+        while (i <= mid){
+            tmp[k++] = arr[i++];
+        }
+        while (j <= end){
+            tmp[k++] = arr[j++];
+        }
+        for (int l = 0; l < k;l++){
+            arr[start + l] = tmp[l];
+        }
+    }
 }
