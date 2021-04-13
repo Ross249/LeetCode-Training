@@ -1,4 +1,4 @@
-# LeetCode练习
+# 算法练习
 1. [生产者消费者](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/consumerAndProducer)
 2. [列表与数组](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/list)
 3. [树](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/tree)
