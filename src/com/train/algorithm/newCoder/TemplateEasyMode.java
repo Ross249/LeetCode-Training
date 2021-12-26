@@ -1,4 +1,4 @@
-package com.train.algorithm;
+package com.train.algorithm.newCoder;
 
 import com.train.algorithm.tree.TreeTravel;
 

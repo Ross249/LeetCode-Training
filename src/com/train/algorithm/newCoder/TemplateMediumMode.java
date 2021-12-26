@@ -1,4 +1,4 @@
-package com.train.algorithm;
+package com.train.algorithm.newCoder;
 
 import java.util.*;
 
