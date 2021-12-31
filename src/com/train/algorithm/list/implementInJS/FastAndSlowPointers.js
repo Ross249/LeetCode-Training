@@ -1,9 +1,4 @@
 // 快慢指针
-// 列表结构
-function ListNode(val){
-	this.val = val;
-	this.next = null;
-}
 
 // leetcode-141
 var hasCycle = function(head) {
@@ -23,6 +18,27 @@ var hasCycle = function(head) {
 };
 
 // leetcode-202
+function deliverSum(n) {
+	return n.toString().split('').map(i => i ** 2).reduce((a,b)=>a+b);
+}
 var isHappy = function(n) {
-	
+	let fast = n,slow = n;
+	while(slow != fast && fast != 1){
+		slow = deliverSum(slow);
+		fast = deliverSum(deliverSum(fast));
+	}
+	return slow == 1;
+};
+
+// leetcode-876
+var middleNode = function(head) {
+	// if(head == null || head.next == null){
+	// 	return head;
+	// }
+	let a = head,b = head;
+	while(b != null && b.next != null){
+		a = a.next;
+		b = b.next.next;
+	}
+	return a;
 };
