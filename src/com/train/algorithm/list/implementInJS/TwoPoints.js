@@ -47,3 +47,39 @@ var sortedSquares = function(nums) {
 	}
 	return res;
 }
+
+// leetcode-713
+var numSubarrayProductLessThanK = function(nums, k) {
+	if(k <= 1){
+		return 0;
+	}
+	let left = 0,count = 0,start = 1;
+	for(let i = 0;i < nums.length;i++){
+		start *= nums[i];
+		while(start >= k){
+			start /= nums[left];
+			left++;
+		}
+		count += i - left + 1;
+	}
+	return count;
+};
+
+// 面试题16.06.
+var smallestDifference = function(a, b) {
+	a.sort((a,b) => a - b);
+	b.sort((a,b) => a - b);
+	let n = a.length,m = b.length;
+	let i = 0,j = 0;
+	let res = Number.MAX_VALUE;
+	while(i < n && j < m){
+		let tmp = a[i] - b[j];
+		res = Math.min(res,Math.abs(tmp));
+		if(tmp < 0){
+			i++;
+		}else{
+			j++;
+		}
+	}
+	return res;
+};
