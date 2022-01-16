@@ -40,3 +40,21 @@ var totalFruit = function(fruits) {
 
 	return maxLen;
 };
+
+// leetcode-3
+var lengthOfLongestSubstring = function(s) {
+	const o = new Set();
+	const len = s.length;
+	let right = -1,res = 0;
+	for(let i = 0;i < len;i++){
+		if(i != 0){
+			o.delete(s.charAt(i - 1))
+		}
+		while(right + 1 < len && !o.has(s.charAt(right + 1))){
+			o.add(s.charAt(right + 1));
+			right++;
+		}
+		res = Math.max(res,right - i + 1);
+	}
+	return res;
+};
