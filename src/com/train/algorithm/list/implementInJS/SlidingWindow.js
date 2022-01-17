@@ -58,3 +58,19 @@ var lengthOfLongestSubstring = function(s) {
 	}
 	return res;
 };
+
+// leetcode-1493
+var longestSubarray = function(nums) {
+	let count = 0,left = 0, right = 0,res = 0;
+	for(;right < nums.length;right++){
+		count += nums[right];
+		while(left <= right && count <= right - left - 1){
+			if(nums[left] == 1){
+				count--;
+			}
+			left++;
+		}
+		res = Math.max(res,right - left);
+	}
+	return res;
+};
