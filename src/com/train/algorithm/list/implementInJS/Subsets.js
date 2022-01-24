@@ -44,3 +44,19 @@ var permute = function(nums) {
 	}
 			
 };
+
+// leetcode-784
+var letterCasePermutation = function(s) {
+	const ans = [], n = s.length;   
+	function dfs(index, tmp) {
+		if (index === n) return ans.push(tmp);
+		if (isNaN(s[index])) {
+			dfs(index + 1, tmp + s[index].toLowerCase());
+			dfs(index + 1, tmp + s[index].toUpperCase());
+		} else {
+			dfs(index + 1, tmp + s[index]);
+		}
+	}
+	dfs(0, '');
+	return ans;
+};
