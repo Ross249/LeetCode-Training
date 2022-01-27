@@ -58,3 +58,43 @@ var kthSmallest = function(matrix, k) {
 	}
 	return low;
 };
+
+// leetcode-632
+var smallestRange = function(nums) {
+	let allNums = [];
+	let map = {};
+	for (let i = 0;i < nums.length;i++){
+		map[i] = 0;
+		for(let j = 0;j < nums[i].length;j++){
+			allNums.push({
+				num : nums[i][j],
+				type : i
+			});
+		}
+	}
+	allNums.sort((a,b) => {
+		return a.num - b.num;
+	})
+	let left = 0;
+	let count = 0;
+	let minLen = Infinity;
+	let minStart = 0;
+	for(let right = 0;right < allNums.length;right++){
+		if(map[allNums[right].type] === 0){
+			count++;
+		}
+		map[allNums[right].type]++;
+		while(count == nums.length && left <= right){
+			if(allNums[right].num - allNums[left].num < minLen){
+				minLen = allNums[right].num - allNums[left].num;
+				minStart = allNums[left].num;
+			}
+			map[allNums[left].type]--;
+			if(map[allNums[left].type] === 0){
+				count--;
+			}
+			left++;
+		}
+	}
+	return [minStart,minStart + minLen];
+};
