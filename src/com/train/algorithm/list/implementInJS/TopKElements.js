@@ -174,3 +174,28 @@ PriorityQueue.prototype.compare = function (index1, index2) {
 
   return this.compareFn(this.queue[index1], this.queue[index2]);
 };
+
+// leetcode-451
+var frequencySort = function (s) {
+  const map = new Map();
+  const len = s.length;
+  for (let i = 0; i < len; i++) {
+    const c = s[i];
+    const count = (map.get(c) || 0) + 1;
+    map.set(c, count);
+  }
+  const list = [...map.keys()];
+  list.sort((a, b) => {
+    return map.get(b) - map.get(a);
+  });
+  const res = [];
+  const size = list.length;
+  for (let i = 0; i < size; i++) {
+    const c = list[i];
+    const count = map.get(c);
+    for (let j = 0; j < count; j++) {
+      res.push(c);
+    }
+  }
+  return res.join("");
+};
