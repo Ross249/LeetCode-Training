@@ -17,3 +17,30 @@ var levelOrderBottom = function (root) {
   }
   return res.reverse();
 };
+
+// leetcode-103
+var zigzagLevelOrder = function (root) {
+  if (!root) {
+    return [];
+  }
+  const res = [];
+  const queue = [root];
+  let isOrder = true;
+  while (queue.length) {
+    let cur = [];
+    const size = queue.length;
+    for (let i = 0; i < size; i++) {
+      const node = queue.shift();
+      if (isOrder) {
+        cur.push(node.val);
+      } else {
+        cur.unshift(node.val);
+      }
+      node.left && queue.push(node.left);
+      node.right && queue.push(node.right);
+    }
+    res.push(cur);
+    isOrder = !isOrder;
+  }
+  return res;
+};
