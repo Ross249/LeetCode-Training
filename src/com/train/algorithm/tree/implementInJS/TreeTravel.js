@@ -44,3 +44,25 @@ var zigzagLevelOrder = function (root) {
   }
   return res;
 };
+
+// leetcode-637
+var averageOfLevels = function (root) {
+  let res = [],
+    queue = [];
+  queue.push(root);
+  if (root == null) {
+    return res;
+  }
+  while (queue.length) {
+    let length = queue.length;
+    let sum = 0;
+    for (let i = 0; i < length; i++) {
+      let node = queue.shift();
+      sum += node.val;
+      node.left && queue.push(node.left);
+      node.right && queue.push(node.right);
+    }
+    res.push(sum / length);
+  }
+  return res;
+};
