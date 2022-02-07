@@ -83,3 +83,26 @@ var minDepth = function (root) {
   }
   return Math.min(minDepth(root.left), minDepth(root.right)) + 1;
 };
+
+// leetcode-112
+var hasPathSum = function (root, targetSum) {
+  const travel = (node, sum) => {
+    if (sum == 0 && !node.left && !node.right) {
+      return true;
+    }
+    if (!node.left && !node.right) {
+      return false;
+    }
+    if (node.left && travel(node.left, sum - node.left.val)) {
+      return true;
+    }
+    if (node.right && travel(node.right, sum - node.right.val)) {
+      return true;
+    }
+    return false;
+  };
+  if (!root) {
+    return false;
+  }
+  return travel(root, targetSum - root.val);
+};
