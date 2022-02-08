@@ -106,3 +106,25 @@ var hasPathSum = function (root, targetSum) {
   }
   return travel(root, targetSum - root.val);
 };
+
+// leetcode-113
+var pathSum = function (root, targetSum) {
+  let res = [],
+    cur = [];
+  const travel = (node, sum) => {
+    cur.push(node.val);
+    sum -= node.val;
+    if (node.left === null && node.right === null && sum === 0) {
+      res.push(cur.slice());
+    }
+    node.left && travel(node.left, sum);
+    node.right && travel(node.right, sum);
+    let c = cur.pop();
+    sum -= c;
+  };
+  if (root === null) {
+    return res;
+  }
+  travel(root, targetSum);
+  return res;
+};
