@@ -128,3 +128,28 @@ var pathSum = function (root, targetSum) {
   travel(root, targetSum);
   return res;
 };
+
+// leetcode-437
+var pathSum = function (root, targetSum) {
+  if (root == null) {
+    return 0;
+  }
+  let res = sum(root, targetSum);
+  res += pathSum(root.left, targetSum);
+  res += pathSum(root.right, targetSum);
+  return res;
+};
+
+const sum = (root, targetSum) => {
+  let res = 0;
+  if (root == null) {
+    return 0;
+  }
+  const val = root.val;
+  if (val === targetSum) {
+    res++;
+  }
+  res += sum(root.left, targetSum - val);
+  res += sum(root.right, targetSum - val);
+  return res;
+};
