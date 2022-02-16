@@ -14,6 +14,7 @@ var findDisappearedNumbers = function (nums) {
   }
   return res;
 };
+
 // leetcode-287
 var findDuplicate = function (nums) {
   const n = nums.length;
@@ -31,6 +32,20 @@ var findDuplicate = function (nums) {
     } else {
       r = mid - 1;
       res = mid;
+    }
+  }
+  return res;
+};
+
+// leetcode-442
+var findDuplicates = function (nums) {
+  const res = [];
+  for (const num of nums) {
+    const x = Math.abs(num);
+    if (nums[x - 1] < 0) {
+      res.push(x);
+    } else {
+      nums[x - 1] *= -1;
     }
   }
   return res;
