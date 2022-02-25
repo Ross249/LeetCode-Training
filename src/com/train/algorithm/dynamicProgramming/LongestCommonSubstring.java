@@ -27,7 +27,7 @@ public class LongestCommonSubstring {
         return dp[len1][len2];
     }
 
-    // leetcode-400
+    // leetcode-300
     public int lengthOfLIS(int[] nums) {
         if (nums.length == 0) {
             return 0;
