@@ -45,3 +45,25 @@ var maxSubArray = function (nums) {
   }
   return res;
 };
+
+// leetcode-801
+var minSwap = function (nums1, nums2) {
+  let n1 = 0,
+    s1 = 1,
+    len = nums1.length;
+  for (let i = 1; i < len; i++) {
+    let n2 = Number.MAX_VALUE,
+      s2 = Number.MAX_VALUE;
+    if (nums1[i - 1] < nums1[i] && nums2[i - 1] < nums2[i]) {
+      n2 = Math.min(n2, n1);
+      s2 = Math.min(s2, s1 + 1);
+    }
+    if (nums1[i - 1] < nums2[i] && nums2[i - 1] < nums1[i]) {
+      n2 = Math.min(n2, s1);
+      s2 = Math.min(s2, n1 + 1);
+    }
+    n1 = n2;
+    s1 = s2;
+  }
+  return Math.min(n1, s1);
+};
