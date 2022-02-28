@@ -67,3 +67,28 @@ var minSwap = function (nums1, nums2) {
   }
   return Math.min(n1, s1);
 };
+
+// leetcode-1027
+var longestArithSeqLength = function (nums) {
+  let len = nums.length;
+  let dp = [];
+  for (let i = 0; i < len; i++) {
+    dp[i] = [];
+    for (let j = 0; j < len; j++) {
+      dp[i][j] = 2;
+    }
+  }
+  let map = new Map();
+  let max = 0;
+  for (let i = 0; i < len; i++) {
+    for (let j = i + 1; j < len; j++) {
+      let target = 2 * nums[i] - nums[j];
+      if (map.has(target)) {
+        dp[i][j] = dp[map.get(target)][i] + 1;
+      }
+      max = Math.max(dp[i][j], max);
+    }
+    map.set(nums[i], i);
+  }
+  return max;
+};
