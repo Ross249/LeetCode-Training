@@ -36,3 +36,19 @@ function palindrome(s, l, r) {
   }
   return s.substr(l + 1, r - l - 1);
 }
+
+// leetcode-1312
+var minInsertions = function (s) {
+  const n = s.length;
+  const dp = new Array(n).fill(0).map(() => new Array(n).fill(0));
+  for (let j = 1; j < n; j++) {
+    dp[j - 1][j] = s[j - 1] === s[j] ? 0 : 1;
+    for (let i = j - 2; i >= 0; i--) {
+      dp[i][j] =
+        s[i] === s[j]
+          ? dp[i + 1][j - 1]
+          : Math.min(dp[i + 1][j], dp[i][j - 1]) + 1;
+    }
+  }
+  return dp[0][n - 1];
+};
