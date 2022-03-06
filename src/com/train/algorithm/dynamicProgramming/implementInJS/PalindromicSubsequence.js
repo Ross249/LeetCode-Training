@@ -1,4 +1,7 @@
 // 回文子系列
+
+const res = require("express/lib/response");
+
 // leetcode-516
 var longestPalindromeSubseq = function (s) {
   const n = s.length;
@@ -51,4 +54,33 @@ var minInsertions = function (s) {
     }
   }
   return dp[0][n - 1];
+};
+
+// leetcode-131
+var partition = function (s) {
+  const dfs = (i) => {
+    if (i === n) {
+      res.push(ans.slice());
+      return;
+    }
+    for (let j = i; j < n; j++) {
+      if (f[i][j]) {
+        ans.push(s.slice(i, j + 1));
+        dfs(j + 1);
+        ans.pop();
+      }
+    }
+  };
+  const n = s.length;
+  const f = new Array(n).fill(0).map(() => new Array(n).fill(true));
+  let res = [],
+    ans = [];
+
+  for (let i = n - 1; i >= 0; --i) {
+    for (j = i + 1; j < n; j++) {
+      f[i][j] = s[i] === s[j] && f[i + 1][j - 1];
+    }
+  }
+  dfs(0);
+  return res;
 };
