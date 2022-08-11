@@ -10,4 +10,4 @@
 9. [牛客](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/newCoder)
 
 # LeetCode with C++
-1. [List]()
+1. [List](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/list/implementInC%2B%2B)
