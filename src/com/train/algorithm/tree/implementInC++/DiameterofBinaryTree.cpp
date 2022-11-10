@@ -1,7 +1,7 @@
 //
 // Created by 罗斯 on 10/11/2022.
 //
-#include <vector>
+#include <algorithm>
 using namespace std;
 struct TreeNode {
     int val;
