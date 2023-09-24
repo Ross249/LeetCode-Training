@@ -16,3 +16,6 @@
 4. [Tree](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/tree/implementInC%2B%2B)
 5. [Divide and conquer](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/Divideandconquer)
 6. [Dynamic Programming](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/dynamicProgramming/implementInC%2B%2B)
+
+# LeetCode with Python
+1. [List](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/list/implementInPython)
