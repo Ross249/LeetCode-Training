@@ -20,3 +20,4 @@
 # LeetCode with Python
 1. [List](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/list/implementInPython)
 2. [Two Pointers](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/twoPointers/implementInPython)
+3. [Search](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/search/implementInPython)
