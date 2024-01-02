@@ -22,3 +22,4 @@
 2. [Two Pointers](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/twoPointers/implementInPython)
 3. [Search](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/search/implementInPython)
 4. [Tree](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/tree/implementInPython)
+5. [Divide and conquer](https://github.com/Ross249/LeetCode-Training/tree/master/src/com/train/algorithm/Divideandconquer/implementInPython)
